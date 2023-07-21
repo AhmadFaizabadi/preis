@@ -20,11 +20,15 @@
                 <div class="row q-gutter-sm bg-teal-11 text-black">{{ prop.color }}
                   <q-btn flat dense icon="las la-folder-plus"><q-tooltip>{{ $t('newCategoryOrService')
                   }}</q-tooltip>
-                    <q-popup-edit v-model="prop.node" :validate="val => val.length > 5" buttons>
-                      <new-service :node="prop.node" />
+                    <q-popup-edit v-model="prop.node" :validate="val => val.length > 5">
+                      <new-service v-model="prop.node" is-new @on-save="onNew(prop.node, $event)" />
                     </q-popup-edit>
                   </q-btn>
-                  <q-btn flat dense icon="las la-edit"><q-tooltip>{{ $t('editTitle') }}</q-tooltip></q-btn>
+                  <q-btn flat dense icon="las la-edit"><q-tooltip>{{ $t('editTitle') }}</q-tooltip>
+                    <q-popup-edit v-model="prop.node" :validate="val => val.length > 5" v-slot="scope">
+                      <new-service v-model="scope.value" @on-save="onEdit(prop.node, $event)" />
+                    </q-popup-edit>
+                  </q-btn>
                   <q-btn flat dense icon="las la-trash"><q-tooltip>{{ $t('deleteCategoryOrService')
                   }}</q-tooltip></q-btn>
                 </div>
@@ -96,6 +100,14 @@ function findAllParents(tree, nodeFullName, parentList = []) {
 
 defineExpose({ selected })
 
+const onEdit = (node, e) => {
+  node.label = e.label
+  node.icon = e.icon
+}
+
+const onNew = (node, e) => {
+  node.children.push(e)
+}
 </script>
 <style lang="sass" scoped>
 
