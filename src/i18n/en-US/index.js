@@ -15,4 +15,8 @@ export default {
   chooseServiceNameDesc:"enter a name for new service",
   continue:"Continue",
   finish:"Finish",
+  newCategoryOrService:"New Category/Service",
+  editTitle:"Edit Title",
+  deleteCategoryOrService:"Delete Category/Service",
+  serviceName:"Service Name",
 }

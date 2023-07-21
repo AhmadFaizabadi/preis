@@ -4,7 +4,7 @@ export const services = {
     {
       fullName: "paintwork",
       label: "Paintwork",
-      icon: "brush",
+      icon: "las la-brush",
       children: [
         {
           label: "Interior wall",
@@ -16,7 +16,7 @@ export const services = {
           icon: "",
           fullName: "paintwork-external wall",
         },
-        { label: "Roof", icon: "caret-up", fullName: "paintwork-roof" },
+        { label: "Roof", icon: "las la-caret-up", fullName: "paintwork-roof" },
       ],
     },
     {
@@ -48,12 +48,12 @@ export const services = {
           children: [
             {
               label: "Toilet",
-              icon: "toilet",
+              icon: "las la-toilet",
               fullName: "plumbing-sewage plumbing-toilet",
             },
             {
               label: "Well drilling",
-              icon: "long-arrow-alt-down",
+              icon: "las la-long-arrow-alt-down",
               fullName: "plumbing-sewage plumbing-well drilling",
             },
           ],
@@ -81,7 +81,7 @@ export const services = {
             },
             {
               label: "Repair of equipment",
-              icon: "screwdriver",
+              icon: "las la-screwdriver",
               fullName: "electricity-household electricity-repair of equipment",
             },
           ],

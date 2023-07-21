@@ -1,24 +1,62 @@
 <template>
-  <div class="q-pa-md q-gutter-sm" style="min-width: 400px;">
-    <q-input ref="filterRef" filled v-model="filter" label="Search - type in some letters ...">
-      <template v-slot:append>
-        <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
-      </template>
-    </q-input>
+  <q-splitter v-model="splitterModel" style="height: 70vh">
 
-    <q-tree ref="treeRef" :nodes="services.items" node-key="fullName" :filter="filter" :filter-method="myFilterMethod"
-      v-model:selected="selected" />
-  </div>
+    <template v-slot:before>
+      <div class="q-pa-md">
+        <q-input ref="filterRef" filled v-model="filter" label="Search - type in some letters ...">
+          <template v-slot:append>
+            <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
+          </template>
+        </q-input>
+
+        <q-tree ref="treeRef" :nodes="services.items" node-key="fullName" accordion :filter="filter"
+          :filter-method="myFilterMethod" v-model:selected="selected">
+          <template v-slot:default-header="prop">
+            <div :class="prop.node.children ? 'text-weight-bold' : ''">
+
+              <q-icon :name="prop.node.icon" class="q-mr-md" :size="prop.node.children ? 'md' : 'sm'"
+                :color="prop.node.children ? 'deep-orange' : 'blue-14'" />{{ prop.node.label }}
+              <q-popup-proxy>
+                <div class="row q-gutter-sm bg-teal-11 text-black">{{ prop.color }}
+                  <q-btn flat dense icon="las la-folder-plus"><q-tooltip>{{ $t('newCategoryOrService')
+                  }}</q-tooltip>
+                    <q-popup-edit v-model="prop.node" :validate="val => val.length > 5" buttons>
+                      <new-service :node="prop.node" />
+                    </q-popup-edit>
+                  </q-btn>
+                  <q-btn flat dense icon="las la-edit"><q-tooltip>{{ $t('editTitle') }}</q-tooltip></q-btn>
+                  <q-btn flat dense icon="las la-trash"><q-tooltip>{{ $t('deleteCategoryOrService')
+                  }}</q-tooltip></q-btn>
+                </div>
+              </q-popup-proxy>
+            </div>
+          </template>
+        </q-tree>
+      </div>
+    </template>
+
+    <template v-slot:after>
+      <div class="q-pa-md">
+        <div class="text-h4 q-mb-md">After</div>
+        <div v-for="n in 20" :key="n" class="q-my-md">{{ n }}. Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+          Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda
+          consectetur culpa fuga nulla ullam. In, libero.</div>
+      </div>
+    </template>
+
+  </q-splitter>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { services } from 'src/data/demoServices'
+import NewService from 'src/components/NewService.vue'
 
 const filter = ref('')
 const selected = ref('')
 const filterRef = ref(null)
 const treeRef = ref(null)
+const splitterModel = ref(50)
 const myFilterMethod = (node, filter) => {
   const filt = filter.toLowerCase().split(' ')
   const found = filt.every(e => node.fullName.indexOf(e) > -1)
@@ -59,3 +97,8 @@ function findAllParents(tree, nodeFullName, parentList = []) {
 defineExpose({ selected })
 
 </script>
+<style lang="sass" scoped>
+
+.flex-break
+  flex: 1 0 100% !important
+</style>
