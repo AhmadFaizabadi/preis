@@ -19,4 +19,7 @@ export default {
   editTitle:"Edit Title",
   deleteCategoryOrService:"Delete Category/Service",
   serviceName:"Service Name",
+  nodeHasChildRemovingWarning:"Warning! you are removing a node with sub items, ",
+  areYouSureForDeletion:"are you sure?",
+  deleteConfirm:"Deletion confirm"
 }

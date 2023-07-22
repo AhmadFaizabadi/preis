@@ -1,7 +1,7 @@
 <template>
-  <div class="q-pa-md q-gutter-y-md column">
+  <div class="q-pa-md q-gutter-y-md column" style="min-width: 400px;">
     <div v-if="isNew" class="text-red">{{ $t('newService') }}</div>
-    <q-input outlined v-model="title" :label="$t('serviceName')" stack-label />
+    <q-input outlined v-model="title" :label="$t('serviceName')" stack-label autofocus />
     <q-input v-model="icon" label="Icon" clearable>
       <template #append>
         <q-icon name="extension" class="cursor-pointer">
@@ -15,7 +15,7 @@
         </q-icon>
       </template>
     </q-input>
-    <div class="full-width q-gutter-lg q-mt-lg">
+    <div class="full-width q-gutter-md q-mt-lg">
       <q-btn v-close-popup label="save" @click="$emit('on-save', { label: title, icon: icon })" />
       <q-btn v-close-popup label="cancel" />
     </div>
@@ -42,3 +42,4 @@ const pagination = ref({
 })
 watch(icon, () => showIconPicker.value = false)
 </script>
+

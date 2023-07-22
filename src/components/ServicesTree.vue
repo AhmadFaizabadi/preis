@@ -25,11 +25,12 @@
                     </q-popup-edit>
                   </q-btn>
                   <q-btn flat dense icon="las la-edit"><q-tooltip>{{ $t('editTitle') }}</q-tooltip>
-                    <q-popup-edit v-model="prop.node" :validate="val => val.length > 5" v-slot="scope">
-                      <new-service v-model="scope.value" @on-save="onEdit(prop.node, $event)" />
+                    <q-popup-edit v-model="prop.node" :validate="val => val.length > 5">
+                      <new-service v-model="prop.node" @on-save="onEdit(prop.node, $event)" />
                     </q-popup-edit>
                   </q-btn>
-                  <q-btn flat dense icon="las la-trash"><q-tooltip>{{ $t('deleteCategoryOrService')
+                  <q-btn flat dense icon="las la-trash" @click="onDelete(prop.node)"><q-tooltip>{{
+                    $t('deleteCategoryOrService')
                   }}</q-tooltip></q-btn>
                 </div>
               </q-popup-proxy>
@@ -55,7 +56,11 @@
 import { ref } from 'vue'
 import { services } from 'src/data/demoServices'
 import NewService from 'src/components/NewService.vue'
+import { useQuasar } from 'quasar'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
+const $q = useQuasar()
 const filter = ref('')
 const selected = ref('')
 const filterRef = ref(null)
@@ -103,10 +108,39 @@ defineExpose({ selected })
 const onEdit = (node, e) => {
   node.label = e.label
   node.icon = e.icon
+  const p = findAllParents(services.items, node.fullName)
+  if (p.length > 0)
+    treeRef.value.setExpanded(p[0], true)
 }
 
 const onNew = (node, e) => {
-  node.children.push(e)
+  if (!('children' in node))
+    node.children = []
+  node.children.push({ ...e, fullName: node.fullName + '-' + e.label.toLowerCase() })
+  const p = findAllParents(services.items, node.fullName)
+  if (p.length > 0)
+    treeRef.value.setExpanded(p[0], true)
+  treeRef.value.setExpanded(node.fullName, true)
+}
+
+function onDelete(node) {
+  let msg = 'children' in node ? t('nodeHasChildRemovingWarning') : ''
+  msg += t('areYouSureForDeletion')
+  $q.dialog({
+    title: t('deleteConfirm') + ' ' + node.fullName,
+    message: msg,
+    cancel: true,
+    persistent: true
+  }).onOk(() => {
+    const p = findAllParents(services.items, node.fullName)
+    if (p.length > 0) {
+      const children = treeRef.value.getNodeByKey(p.at(-1)).children
+      children.splice(children.findIndex(f => f.fullName === node.fullName), 1)
+      treeRef.value.setExpanded(p[0], true)
+    } else {
+      services.items.splice(services.items.findIndex(f => f.fullName === node.fullName), 1)
+    }
+  })
 }
 </script>
 <style lang="sass" scoped>
