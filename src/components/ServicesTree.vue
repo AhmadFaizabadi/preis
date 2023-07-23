@@ -9,15 +9,15 @@
           </template>
         </q-input>
 
-        <q-tree ref="treeRef" :nodes="services.items" node-key="fullName" accordion :filter="filter"
+        <q-tree ref="treeRef" :nodes="services.items" node-key="fullName" accordion :filter="filter" :duration="10"
           :filter-method="myFilterMethod" v-model:selected="selected">
           <template v-slot:default-header="prop">
             <div :class="prop.node.children ? 'text-weight-bold' : ''">
 
               <q-icon :name="prop.node.icon" class="q-mr-md" :size="prop.node.children ? 'md' : 'sm'"
                 :color="prop.node.children ? 'deep-orange' : 'blue-14'" />{{ prop.node.label }}
-              <q-popup-proxy>
-                <div class="row q-gutter-sm bg-teal-11 text-black">{{ prop.color }}
+              <q-popup-proxy context-menu>
+                <div class="row q-gutter-sm bg-teal-11 text-black">
                   <q-btn flat dense icon="las la-folder-plus"><q-tooltip>{{ $t('newCategoryOrService')
                   }}</q-tooltip>
                     <q-popup-edit v-model="prop.node" :validate="val => val.length > 5">
@@ -40,12 +40,11 @@
       </div>
     </template>
 
-    <template v-slot:after>
+    <template v-slot:after v-if="treeRef?.selected">
       <div class="q-pa-md">
-        <div class="text-h4 q-mb-md">After</div>
-        <div v-for="n in 20" :key="n" class="q-my-md">{{ n }}. Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-          Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda
-          consectetur culpa fuga nulla ullam. In, libero.</div>
+        <div class="text-h4 q-mb-md">{{ treeRef?.selected }}</div>
+        <service-prices v-model:serviceName="treeRef.selected" />
+
       </div>
     </template>
 
@@ -56,6 +55,7 @@
 import { ref } from 'vue'
 import { services } from 'src/data/demoServices'
 import NewService from 'src/components/NewService.vue'
+import ServicePrices from 'src/components/ServicePrices.vue'
 import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
 

@@ -21,5 +21,12 @@ export default {
   serviceName:"Service Name",
   nodeHasChildRemovingWarning:"Warning! you are removing a node with sub items, ",
   areYouSureForDeletion:"are you sure?",
-  deleteConfirm:"Deletion confirm"
+  deleteConfirm:"Deletion confirm",
+  newPrice:"New Price",
+  editPrice:"Edit Price",
+  save:"Save",
+  cancel:"Cancel",
+  priceName:"Price Name",
+  unitName:"Unit Name",
+  unitValue:"Unit Value",
 }
