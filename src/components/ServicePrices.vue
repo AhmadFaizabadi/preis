@@ -2,7 +2,7 @@
   <q-list bordered class="rounded-borders" style="max-width: 350px">
     <q-item clickable v-ripple>
       {{ $t('newPrice') }}
-      <q-popup-proxy>
+      <q-popup-proxy class="fixed-center">
         <new-price @on-save="onNew($event)" is-new />
       </q-popup-proxy>
     </q-item>
