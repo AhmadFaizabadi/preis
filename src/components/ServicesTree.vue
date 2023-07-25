@@ -1,54 +1,62 @@
 <template>
-  <q-splitter v-model="splitterModel" style="height: 70vh">
+  <div class="column">
+    <div class="col">
+      <q-splitter v-model="splitterModel" style="height: 70vh">
 
-    <template v-slot:before>
-      <div class="q-pa-md">
-        <q-input ref="filterRef" filled v-model="filter" label="Search - type in some letters ...">
-          <template v-slot:append>
-            <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
-          </template>
-        </q-input>
+        <template v-slot:before>
+          <div class="q-pa-md">
+            <q-input ref="filterRef" filled v-model="filter" label="Search - type in some letters ...">
+              <template v-slot:append>
+                <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
+              </template>
+            </q-input>
 
-        <q-tree ref="treeRef" :nodes="services.items" node-key="fullName" accordion :filter="filter" :duration="10"
-          :filter-method="myFilterMethod" v-model:selected="selected">
-          <template v-slot:default-header="prop">
-            <div :class="prop.node.children ? 'text-weight-bold' : ''">
+            <q-tree ref="treeRef" :nodes="services.items" node-key="fullName" accordion :filter="filter" :duration="10"
+              :filter-method="myFilterMethod" v-model:selected="selected">
+              <template v-slot:default-header="prop">
+                <div :class="prop.node.children ? 'text-weight-bold' : ''">
 
-              <q-icon :name="prop.node.icon" class="q-mr-md" :size="prop.node.children ? 'md' : 'sm'"
-                :color="prop.node.children ? 'deep-orange' : 'blue-14'" />{{ prop.node.label }}
-              <q-popup-proxy context-menu>
-                <div class="row q-gutter-sm bg-teal-11 text-black">
-                  <q-btn flat dense icon="las la-folder-plus"><q-tooltip>{{ $t('newCategoryOrService')
-                  }}</q-tooltip>
-                    <q-popup-edit v-model="prop.node" :validate="val => val.length > 5">
-                      <new-service v-model="prop.node" is-new @on-save="onNew(prop.node, $event)" />
-                    </q-popup-edit>
-                  </q-btn>
-                  <q-btn flat dense icon="las la-edit"><q-tooltip>{{ $t('editTitle') }}</q-tooltip>
-                    <q-popup-edit v-model="prop.node" :validate="val => val.length > 5">
-                      <new-service v-model="prop.node" @on-save="onEdit(prop.node, $event)" />
-                    </q-popup-edit>
-                  </q-btn>
-                  <q-btn flat dense icon="las la-trash" @click="onDelete(prop.node)"><q-tooltip>{{
-                    $t('deleteCategoryOrService')
-                  }}</q-tooltip></q-btn>
+                  <q-icon :name="prop.node.icon" class="q-mr-md" :size="prop.node.children ? 'md' : 'sm'"
+                    :color="prop.node.children ? 'deep-orange' : 'blue-14'" />{{ prop.node.label }}
+                  <q-popup-proxy v-if="editable" context-menu>
+                    <div class="row q-gutter-sm bg-teal-11 text-black">
+                      <q-btn flat dense icon="las la-folder-plus"><q-tooltip>{{ $t('newCategoryOrService')
+                      }}</q-tooltip>
+                        <q-popup-edit v-model="prop.node" :validate="val => val.length > 5">
+                          <new-service v-model="prop.node" is-new @on-save="onNew(prop.node, $event)" />
+                        </q-popup-edit>
+                      </q-btn>
+                      <q-btn flat dense icon="las la-edit"><q-tooltip>{{ $t('editTitle') }}</q-tooltip>
+                        <q-popup-edit v-model="prop.node" :validate="val => val.length > 5">
+                          <new-service v-model="prop.node" @on-save="onEdit(prop.node, $event)" />
+                        </q-popup-edit>
+                      </q-btn>
+                      <q-btn flat dense icon="las la-trash" @click="onDelete(prop.node)"><q-tooltip>{{
+                        $t('deleteCategoryOrService')
+                      }}</q-tooltip></q-btn>
+                    </div>
+                  </q-popup-proxy>
                 </div>
-              </q-popup-proxy>
-            </div>
-          </template>
-        </q-tree>
-      </div>
-    </template>
+              </template>
+            </q-tree>
+          </div>
+        </template>
 
-    <template v-slot:after v-if="treeRef?.selected">
-      <div class="q-pa-md">
-        <div class="text-h4 q-mb-md">{{ treeRef?.selected }}</div>
-        <service-prices v-model:serviceName="treeRef.selected" />
+        <template v-slot:after v-if="treeRef?.selected && !treeRef?.getNodeByKey(treeRef?.selected).children">
+          <div class="q-pa-md">
+            <div class="text-h4 q-mb-md">{{ treeRef?.selected.split('-').at(-1) }}</div>
+            <service-prices v-model:serviceName="treeRef.selected" :editable="editable"
+              @on-select="$emit('on-select', $event)" />
 
-      </div>
-    </template>
+          </div>
+        </template>
 
-  </q-splitter>
+      </q-splitter>
+    </div>
+    <div v-if="!editable" class="justify-end">
+      <q-btn flat v-close-popup :label="$t('close')" />
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -59,6 +67,13 @@ import ServicePrices from 'src/components/ServicePrices.vue'
 import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
 
+defineProps({
+  editable: {
+    type: Boolean,
+    default: false
+  }
+})
+defineEmits(['on-select'])
 const { t } = useI18n()
 const $q = useQuasar()
 const filter = ref('')
@@ -66,6 +81,7 @@ const selected = ref('')
 const filterRef = ref(null)
 const treeRef = ref(null)
 const splitterModel = ref(50)
+
 const myFilterMethod = (node, filter) => {
   const filt = filter.toLowerCase().split(' ')
   const found = filt.every(e => node.fullName.indexOf(e) > -1)
@@ -142,6 +158,7 @@ function onDelete(node) {
     }
   })
 }
+
 </script>
 <style lang="sass" scoped>
 

@@ -6,12 +6,12 @@
     </q-card-section>
     <q-card-section>
       <div class="q-pa-md q-ma-md">
-        <q-input dense color="purple-12" v-model="priceModel.priceName" :label="$t('priceName')" autofocus>
+        <q-input color="purple-12" v-model="priceModel.priceName" :label="$t('priceName')" autofocus>
           <template v-slot:prepend>
             <q-icon name="las la-hand-point-right" />
           </template>
         </q-input>
-        <q-input dense color="purple-12" v-model="priceModel.unitName" :label="$t('unitName')">
+        <q-input color="purple-12" v-model="priceModel.unitName" :label="$t('unitName')">
           <template v-slot:prepend>
             <q-icon name="las la-ruler-vertical" />
           </template>
@@ -23,7 +23,7 @@
         </q-input>
       </div>
     </q-card-section>
-    <q-card-actions class="fixed-bottom">
+    <q-card-actions class="justify-end">
       <q-btn v-close-popup @click="$emit('on-save', priceModel)" :label="$t('save')" />
       <q-btn :label="$t('cancel')" v-close-popup />
     </q-card-actions>
@@ -43,7 +43,7 @@ const props = defineProps({
     required: false
   }
 })
-const priceModel = ref(props.price || { serviceName: '', priceName: '', unitName: '', unitValue: 0 })
+const priceModel = ref({ ...props.price } || { serviceName: '', priceName: '', unitName: '', unitValue: 0 })
 defineEmits(['on-save'])
 </script>
 

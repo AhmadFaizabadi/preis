@@ -2,7 +2,7 @@
   <q-page padding>
     <q-banner>{{ $t('serviceManagement') }}</q-banner>
     <div class="row">
-      <services-tree ref="serviceTreeRef" class="full-width" />
+      <services-tree editable ref="serviceTreeRef" class="full-width" />
     </div>
   </q-page>
 </template>
