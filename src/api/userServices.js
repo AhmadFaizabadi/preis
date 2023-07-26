@@ -10,5 +10,9 @@ function saveUser(user){
   LocalStorage.set('user', user)
 }
 
-return {loading, loadUser, saveUser}
+async function registerUser(user){
+
+}
+
+return {loading, loadUser, saveUser, registerUser}
 }

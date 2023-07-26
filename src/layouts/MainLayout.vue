@@ -11,25 +11,15 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
-          Unitek
-        </q-toolbar-title>
+        <q-toolbar-title> Unitek </q-toolbar-title>
 
         <div>Vorabrechnung v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <q-item-label
-          header
-        >
-          UserName
-        </q-item-label>
+        <q-item-label header> UserName </q-item-label>
 
         <EssentialLink
           v-for="link in essentialLinks"
@@ -46,34 +36,42 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
-const linksList = [
-  {
-    title: 'serviceManagement',
-    caption: 'serviceManagementCaption',
-    icon: 'tasks',
-    link: '/services'
-  },
-]
+import { defineComponent, ref } from "vue";
+import EssentialLink from "components/EssentialLink.vue";
+import { useI18n } from "vue-i18n";
 
 export default defineComponent({
-  name: 'MainLayout',
+  name: "MainLayout",
 
   components: {
-    EssentialLink
+    EssentialLink,
   },
 
-  setup () {
-    const leftDrawerOpen = ref(false)
+  setup() {
+    const leftDrawerOpen = ref(false);
+    const { t } = useI18n();
+    const linksList = [
+      {
+        title: "Signup",
+        caption: t("signup"),
+        icon: "las la-user-plus",
+        link: "/register",
+      },
+      {
+        title: "serviceManagement",
+        caption: "serviceManagementCaption",
+        icon: "tasks",
+        link: "/services",
+      },
+    ];
 
     return {
       essentialLinks: linksList,
       leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
-    }
-  }
-})
+      toggleLeftDrawer() {
+        leftDrawerOpen.value = !leftDrawerOpen.value;
+      },
+    };
+  },
+});
 </script>
