@@ -2,38 +2,78 @@
   <div class="column">
     <div class="col">
       <q-splitter v-model="splitterModel" style="height: 70vh">
-
         <template v-slot:before>
           <div class="q-pa-md">
-            <q-input ref="filterRef" filled v-model="filter" label="Search - type in some letters ...">
+            <q-input
+              ref="filterRef"
+              filled
+              v-model="filter"
+              label="Search - type in some letters ..."
+            >
               <template v-slot:append>
-                <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
+                <q-icon
+                  v-if="filter !== ''"
+                  name="clear"
+                  class="cursor-pointer"
+                  @click="resetFilter"
+                />
               </template>
             </q-input>
 
-            <q-tree ref="treeRef" :nodes="services.items" node-key="fullName" accordion :filter="filter" :duration="10"
-              :filter-method="myFilterMethod" v-model:selected="selected">
+            <q-tree
+              ref="treeRef"
+              :nodes="services.items"
+              node-key="fullName"
+              accordion
+              :filter="filter"
+              :duration="10"
+              :filter-method="myFilterMethod"
+              v-model:selected="selected"
+            >
               <template v-slot:default-header="prop">
                 <div :class="prop.node.children ? 'text-weight-bold' : ''">
-
-                  <q-icon :name="prop.node.icon" class="q-mr-md" :size="prop.node.children ? 'md' : 'sm'"
-                    :color="prop.node.children ? 'deep-orange' : 'blue-14'" />{{ prop.node.label }}
+                  <q-icon
+                    :name="prop.node.icon"
+                    class="q-mr-md"
+                    :size="prop.node.children ? 'md' : 'sm'"
+                    :color="prop.node.children ? 'deep-orange' : 'blue-14'"
+                  />{{ prop.node.label }}
                   <q-popup-proxy v-if="editable" context-menu>
                     <div class="row q-gutter-sm bg-teal-11 text-black">
-                      <q-btn flat dense icon="las la-folder-plus"><q-tooltip>{{ $t('newCategoryOrService')
-                      }}</q-tooltip>
-                        <q-popup-edit v-model="prop.node" :validate="val => val.length > 5">
-                          <new-service v-model="prop.node" is-new @on-save="onNew(prop.node, $event)" />
+                      <q-btn flat dense icon="las la-folder-plus"
+                        ><q-tooltip>{{ $t("newCategoryOrService") }}</q-tooltip>
+                        <q-popup-edit
+                          v-model="prop.node"
+                          :validate="(val) => val.length > 5"
+                        >
+                          <new-service
+                            v-model="prop.node"
+                            is-new
+                            @on-save="onNew(prop.node, $event)"
+                          />
                         </q-popup-edit>
                       </q-btn>
-                      <q-btn flat dense icon="las la-edit"><q-tooltip>{{ $t('editTitle') }}</q-tooltip>
-                        <q-popup-edit v-model="prop.node" :validate="val => val.length > 5">
-                          <new-service v-model="prop.node" @on-save="onEdit(prop.node, $event)" />
+                      <q-btn flat dense icon="las la-edit"
+                        ><q-tooltip>{{ $t("editTitle") }}</q-tooltip>
+                        <q-popup-edit
+                          v-model="prop.node"
+                          :validate="(val) => val.length > 5"
+                        >
+                          <new-service
+                            v-model="prop.node"
+                            @on-save="onEdit(prop.node, $event)"
+                          />
                         </q-popup-edit>
                       </q-btn>
-                      <q-btn flat dense icon="las la-trash" @click="onDelete(prop.node)"><q-tooltip>{{
-                        $t('deleteCategoryOrService')
-                      }}</q-tooltip></q-btn>
+                      <q-btn
+                        flat
+                        dense
+                        icon="las la-trash"
+                        @click="onDelete(prop.node)"
+                        ><q-tooltip>{{
+                          $t("deleteCategoryOrService")
+                        }}</q-tooltip></q-btn
+                      >
                     </div>
                   </q-popup-proxy>
                 </div>
@@ -42,15 +82,24 @@
           </div>
         </template>
 
-        <template v-slot:after v-if="treeRef?.selected && !treeRef?.getNodeByKey(treeRef?.selected).children">
+        <template
+          v-slot:after
+          v-if="
+            treeRef?.selected &&
+            !treeRef?.getNodeByKey(treeRef?.selected).children
+          "
+        >
           <div class="q-pa-md">
-            <div class="text-h4 q-mb-md">{{ treeRef?.selected.split('-').at(-1) }}</div>
-            <service-prices v-model:serviceName="treeRef.selected" :editable="editable"
-              @on-select="$emit('on-select', $event)" />
-
+            <div class="text-h4 q-mb-md">
+              {{ treeRef?.selected.split("-").at(-1) }}
+            </div>
+            <service-prices
+              v-model:serviceName="treeRef.selected"
+              :editable="editable"
+              @on-select="$emit('on-select', $event)"
+            />
           </div>
         </template>
-
       </q-splitter>
     </div>
     <div v-if="!editable" class="justify-end">
@@ -60,48 +109,48 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { services } from 'src/data/demoServices'
-import NewService from 'src/components/NewService.vue'
-import ServicePrices from 'src/components/ServicePrices.vue'
-import { useQuasar } from 'quasar'
-import { useI18n } from 'vue-i18n'
-
+import { ref } from "vue";
+import { services } from "src/data/demoServices";
+import NewService from "src/components/NewService.vue";
+import ServicePrices from "src/components/ServicePrices.vue";
+import { useQuasar } from "quasar";
+import { useI18n } from "vue-i18n";
+import { useUserService } from "src/api/userServices";
 defineProps({
   editable: {
     type: Boolean,
-    default: false
-  }
-})
-defineEmits(['on-select'])
-const { t } = useI18n()
-const $q = useQuasar()
-const filter = ref('')
-const selected = ref('')
-const filterRef = ref(null)
-const treeRef = ref(null)
-const splitterModel = ref(50)
+    default: false,
+  },
+});
+defineEmits(["on-select"]);
+const { pushOutbox } = useUserService();
+const { t } = useI18n();
+const $q = useQuasar();
+const filter = ref("");
+const selected = ref("");
+const filterRef = ref(null);
+const treeRef = ref(null);
+const splitterModel = ref(50);
 
 const myFilterMethod = (node, filter) => {
-  const filt = filter.toLowerCase().split(' ')
-  const found = filt.every(e => node.fullName.indexOf(e) > -1)
+  const filt = filter.toLowerCase().split(" ");
+  const found = filt.every((e) => node.fullName.indexOf(e) > -1);
   if (found) {
-    treeRef.value.setExpanded(node.fullName, true)
+    treeRef.value.setExpanded(node.fullName, true);
     for (const p of findAllParents(services.items, node.fullName))
-      treeRef.value.setExpanded(p, true)
+      treeRef.value.setExpanded(p, true);
     // treeRef.value.setTicked(node.fullName, true)
-    selected.value = node.fullName
+    selected.value = node.fullName;
     // const rootNode = getRootNode(treeRef.value, node)
     // console.log('root node is ', rootNode)
   }
-  return found
-}
+  return found;
+};
 const resetFilter = () => {
-  filter.value = ''
-  treeRef.value.collapseAll()
-  filterRef.value.focus()
-}
-
+  filter.value = "";
+  treeRef.value.collapseAll();
+  filterRef.value.focus();
+};
 
 function findAllParents(tree, nodeFullName, parentList = []) {
   for (const item of tree) {
@@ -119,46 +168,52 @@ function findAllParents(tree, nodeFullName, parentList = []) {
   return null;
 }
 
-defineExpose({ selected })
+defineExpose({ selected });
 
 const onEdit = (node, e) => {
-  node.label = e.label
-  node.icon = e.icon
-  const p = findAllParents(services.items, node.fullName)
-  if (p.length > 0)
-    treeRef.value.setExpanded(p[0], true)
-}
+  node.label = e.label;
+  node.icon = e.icon;
+  const p = findAllParents(services.items, node.fullName);
+  if (p.length > 0) treeRef.value.setExpanded(p[0], true);
+};
 
 const onNew = (node, e) => {
-  if (!('children' in node))
-    node.children = []
-  node.children.push({ ...e, fullName: node.fullName + '-' + e.label.toLowerCase() })
-  const p = findAllParents(services.items, node.fullName)
-  if (p.length > 0)
-    treeRef.value.setExpanded(p[0], true)
-  treeRef.value.setExpanded(node.fullName, true)
-}
+  if (!("children" in node)) node.children = [];
+  node.children.push({
+    ...e,
+    fullName: node.fullName + "-" + e.label.toLowerCase(),
+  });
+  const p = findAllParents(services.items, node.fullName);
+  if (p.length > 0) treeRef.value.setExpanded(p[0], true);
+  treeRef.value.setExpanded(node.fullName, true);
+  pushOutbox("services");
+};
 
 function onDelete(node) {
-  let msg = 'children' in node ? t('nodeHasChildRemovingWarning') : ''
-  msg += t('areYouSureForDeletion')
+  let msg = "children" in node ? t("nodeHasChildRemovingWarning") : "";
+  msg += t("areYouSureForDeletion");
   $q.dialog({
-    title: t('deleteConfirm') + ' ' + node.fullName,
+    title: t("deleteConfirm") + " " + node.fullName,
     message: msg,
     cancel: true,
-    persistent: true
+    persistent: true,
   }).onOk(() => {
-    const p = findAllParents(services.items, node.fullName)
+    const p = findAllParents(services.items, node.fullName);
     if (p.length > 0) {
-      const children = treeRef.value.getNodeByKey(p.at(-1)).children
-      children.splice(children.findIndex(f => f.fullName === node.fullName), 1)
-      treeRef.value.setExpanded(p[0], true)
+      const children = treeRef.value.getNodeByKey(p.at(-1)).children;
+      children.splice(
+        children.findIndex((f) => f.fullName === node.fullName),
+        1
+      );
+      treeRef.value.setExpanded(p[0], true);
     } else {
-      services.items.splice(services.items.findIndex(f => f.fullName === node.fullName), 1)
+      services.items.splice(
+        services.items.findIndex((f) => f.fullName === node.fullName),
+        1
+      );
     }
-  })
+  });
 }
-
 </script>
 <style lang="sass" scoped>
 
