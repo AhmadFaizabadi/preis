@@ -19,7 +19,7 @@ module.exports = configure(function (/* ctx */) {
       // include: [],
       // exclude: [],
       // rawOptions: {},
-      warnings: true,
+      warnings: false,
       errors: true
     },
 
@@ -30,7 +30,7 @@ module.exports = configure(function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli/boot-files
     boot: [
-      'i18n','login'
+      'i18n','DropBox', 'login'
 
     ],
 
@@ -75,6 +75,8 @@ module.exports = configure(function (/* ctx */) {
       // minify: false,
       // polyfillModulePreload: true,
       // distDir
+      envFolder:'./env',
+      envDir:'./env',
 
       // extendViteConf (viteConf) {},
       // viteVuePluginOptions: {},
