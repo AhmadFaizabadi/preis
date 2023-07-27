@@ -13,6 +13,7 @@ function saveUser(user){
 async function registerUser(user){
 
 }
-
-return {loading, loadUser, saveUser, registerUser}
+function pushOutbox(name){}
+function popOutbox(name){}
+return {loading, loadUser, saveUser, registerUser, pushOutbox,popOutbox}
 }
