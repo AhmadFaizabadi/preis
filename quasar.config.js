@@ -75,8 +75,6 @@ module.exports = configure(function (/* ctx */) {
       // minify: false,
       // polyfillModulePreload: true,
       // distDir
-      envFolder:'./env',
-      envDir:'./env',
 
       // extendViteConf (viteConf) {},
       // viteVuePluginOptions: {},
