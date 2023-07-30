@@ -11,7 +11,7 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title> Unitek </q-toolbar-title>
+        <q-toolbar-title> Unitec </q-toolbar-title>
 
         <div>Vorabrechnung v{{ $q.version }}</div>
       </q-toolbar>
@@ -52,7 +52,7 @@ export default defineComponent({
     const { t } = useI18n();
     const linksList = [
       {
-        title: "Signup",
+        title: "signup",
         caption: t("signup"),
         icon: "las la-user-plus",
         link: "/register",
