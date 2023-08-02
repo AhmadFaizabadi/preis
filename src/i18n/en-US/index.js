@@ -29,5 +29,5 @@ export default {
   priceName:"Price Name",
   unitName:"Unit Name",
   unitValue:"Unit Value",
-  signup:"Signup"
+  signup:"Sign up"
 }

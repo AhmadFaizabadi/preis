@@ -22,7 +22,7 @@
 
             <q-tree
               ref="treeRef"
-              :nodes="services.items"
+              :nodes="supplies"
               node-key="fullName"
               accordion
               :filter="filter"
@@ -110,12 +110,13 @@
 
 <script setup>
 import { ref } from "vue";
-import { services } from "src/data/demoServices";
 import NewService from "src/components/NewService.vue";
 import ServicePrices from "src/components/ServicePrices.vue";
 import { useQuasar } from "quasar";
 import { useI18n } from "vue-i18n";
-import { useUserService } from "src/api/userServices";
+import { useInvoiceStore } from "src/stores/invoice";
+import { storeToRefs } from "pinia";
+
 defineProps({
   editable: {
     type: Boolean,
@@ -123,7 +124,8 @@ defineProps({
   },
 });
 defineEmits(["on-select"]);
-const { pushOutbox } = useUserService();
+const invoiceStore = useInvoiceStore();
+const { supplies } = storeToRefs(invoiceStore);
 const { t } = useI18n();
 const $q = useQuasar();
 const filter = ref("");
@@ -137,12 +139,9 @@ const myFilterMethod = (node, filter) => {
   const found = filt.every((e) => node.fullName.indexOf(e) > -1);
   if (found) {
     treeRef.value.setExpanded(node.fullName, true);
-    for (const p of findAllParents(services.items, node.fullName))
+    for (const p of findAllParents(supplies.value, node.fullName))
       treeRef.value.setExpanded(p, true);
-    // treeRef.value.setTicked(node.fullName, true)
     selected.value = node.fullName;
-    // const rootNode = getRootNode(treeRef.value, node)
-    // console.log('root node is ', rootNode)
   }
   return found;
 };
@@ -170,23 +169,18 @@ function findAllParents(tree, nodeFullName, parentList = []) {
 
 defineExpose({ selected });
 
-const onEdit = (node, e) => {
-  node.label = e.label;
-  node.icon = e.icon;
-  const p = findAllParents(services.items, node.fullName);
+const onEdit = (parent, e) => {
+  parent.label = e.label;
+  parent.icon = e.icon;
+  const p = findAllParents(supplies, parent.fullName);
   if (p.length > 0) treeRef.value.setExpanded(p[0], true);
 };
 
-const onNew = (node, e) => {
-  if (!("children" in node)) node.children = [];
-  node.children.push({
-    ...e,
-    fullName: node.fullName + "-" + e.label.toLowerCase(),
-  });
-  const p = findAllParents(services.items, node.fullName);
+const onNew = (parent, node) => {
+  invoiceStore.addSupply(parent, node);
+  const p = findAllParents(supplies.value, parent.fullName);
   if (p.length > 0) treeRef.value.setExpanded(p[0], true);
-  treeRef.value.setExpanded(node.fullName, true);
-  pushOutbox("services");
+  treeRef.value.setExpanded(parent.fullName, true);
 };
 
 function onDelete(node) {
@@ -198,7 +192,7 @@ function onDelete(node) {
     cancel: true,
     persistent: true,
   }).onOk(() => {
-    const p = findAllParents(services.items, node.fullName);
+    const p = findAllParents(supplies, node.fullName);
     if (p.length > 0) {
       const children = treeRef.value.getNodeByKey(p.at(-1)).children;
       children.splice(
@@ -207,8 +201,8 @@ function onDelete(node) {
       );
       treeRef.value.setExpanded(p[0], true);
     } else {
-      services.items.splice(
-        services.items.findIndex((f) => f.fullName === node.fullName),
+      supplies.splice(
+        supplies.findIndex((f) => f.fullName === node.fullName),
         1
       );
     }

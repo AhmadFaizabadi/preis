@@ -15,7 +15,10 @@
   "dependencies": {
     "@quasar/extras": "^1.16.4",
     "@quasar/quasar-ui-qiconpicker": "^2.0.7",
+    "axios": "^1.4.0",
     "dropbox": "^10.34.0",
+    "fastify": "^4.21.0",
+    "pinia": "^2.1.6",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
     "vue-i18n": "^9.0.0",
@@ -28,6 +31,7 @@
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-vue": "^9.0.0",
+    "fastify-webpack-hmr": "^3.0.0",
     "postcss": "^8.4.14",
     "prettier": "^2.5.1"
   },
