@@ -20,7 +20,7 @@ namespace InvoiceServer.Controllers
     public async Task<IActionResult> GetBaseData(int version)
     {
       var data = await _invoiceServices.GetBaseDataAsync(version);
-      return Ok(data);
+      return Ok(new { version = data.Item1, supplies = data.Item2, prices = data.Item3 });
     }
 
     [HttpPost("save-base-data")]

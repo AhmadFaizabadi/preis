@@ -4,6 +4,14 @@ import { api } from "src/boot/axios";
 
 const POST_DEBOUNCE_MINUTES = 1;
 let sync_timeout;
+function deepScan(nodes,id){
+  for (node of nodes)
+    if (node.fullName === id) return node
+    if ('children' in node){
+      const child = deepScan(node.children, id)
+      if (child) return child
+    }
+}
 export const useInvoiceStore = defineStore("invoice", {
   state: () => ({
     baseVersion: LocalStorage.getItem("baseVersion") || 0,
@@ -24,13 +32,13 @@ export const useInvoiceStore = defineStore("invoice", {
       let responseBase, responseInvoice;
       if (dataType === "*" || dataType === "base") {
         responseBase = await api.get(`invoice/base-data/${this.baseVersion}`);
-        if (responseBase && responseBase.statuscode === 200) {
+        if (responseBase && responseBase.status === 200) {
           const data = responseBase.data;
           if (data.version > this.baseVersion) {
             this.baseVersion = data.version;
             this.supplies = JSON.parse(data.supplies);
             this.prices = JSON.parse(data.prices);
-            this.saveData("base", data.version);
+            this.saveData("base", false);
           }
         }
       }
@@ -38,25 +46,24 @@ export const useInvoiceStore = defineStore("invoice", {
         responseInvoice = await api.get(
           `invoice/invoice-data/${this.invoiceVersion}`
         );
-        if (responseInvoice && responseInvoice.statuscode === 200) {
+        if (responseInvoice && responseInvoice.status === 200) {
           const data = responseInvoice.data;
           if (data.version > this.invoiceVersion) {
             this.invoiceVersion = data.version;
             this.supplies = JSON.parse(data.supplies);
             this.prices = JSON.parse(data.prices);
-            this.saveData("invoice", data.version);
+            this.saveData("invoice", false);
           }
         }
       }
     },
     async post(dataType) {
       let responseBase, responseInvoice;
-      debugger
       if (dataType === "*" || dataType === "base") {
         responseBase = await api.post("invoice/save-base-data", {
           version: this.baseVersion,
           supplies: JSON.stringify(this.supplies),
-          prices: JSON.stringify( this.prices),
+          prices: JSON.stringify(this.prices),
         });
       }
       if (dataType === "*" || dataType === "invoice") {
@@ -82,7 +89,7 @@ export const useInvoiceStore = defineStore("invoice", {
         this.customers = LocalStorage.getItem("customers") || [];
       }
     },
-    saveData(dataType) {
+    saveData(dataType, postIt=false) {
       if (dataType === "*" || dataType === "base") {
         LocalStorage.set("baseVersion", this.baseVersion);
         LocalStorage.set("supplies", this.supplies);
@@ -93,21 +100,14 @@ export const useInvoiceStore = defineStore("invoice", {
         LocalStorage.set("invoices", this.invoices);
         LocalStorage.set("customers", this.customers);
       }
-    },
-    addSupply(parent, node) {
-      if (!("children" in parent)) parent.children = [];
-      parent.children.push({
-        ...node,
-        fullName: parent.fullName + "-" + node.label.toLowerCase(),
-      });
-      this.saveData("base");
-      if (sync_timeout) clearTimeout(sync_timeout); else this.baseVersion+=1
-      sync_timeout = setTimeout(
-        async () => {await this.post('base'),
-        60 * 1000 * POST_DEBOUNCE_MINUTES;
-        sync_timeout=undefined;
+      if (postIt){
+        if (sync_timeout) clearTimeout(sync_timeout); else this.baseVersion+=1
+        sync_timeout = setTimeout(
+          async () => {await this.post('base')
+                  sync_timeout=undefined;
+        },60 * 1000 * POST_DEBOUNCE_MINUTES
+        );
       }
-      );
     },
   },
 });
