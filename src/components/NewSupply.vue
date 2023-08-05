@@ -1,17 +1,17 @@
 <template>
-  <q-card class="q-pa-md q-gutter-y-md" style="min-width: 400px">
+  <q-card class="q-pa-md q-gutter-y-md" style="width: 400px">
     <q-card-section v-if="isNew" class="text-red">{{
       $t("newSupply")
     }}</q-card-section>
     <q-card-section>
       <q-input
         outlined
-        v-model="title"
+        v-model="model.label"
         :label="$t('supplyName')"
         stack-label
         autofocus
       />
-      <q-input v-model="icon" label="Icon" clearable>
+      <q-input v-model="model.icon" label="Icon" clearable>
         <template #append>
           <q-icon name="extension" class="cursor-pointer">
             <q-popup-proxy
@@ -29,7 +29,7 @@
                   class="q-ma-md"
                 />
                 <q-icon-picker
-                  v-model="icon"
+                  v-model="model.icon"
                   v-model:model-pagination="pagination"
                   :filter="filter"
                   :icons="lineIcons.icons"
@@ -47,7 +47,7 @@
         <q-btn
           v-close-popup
           label="save"
-          @click="$emit('on-save', { label: title, icon: icon })"
+          @click="$emit('update:model-value', model)"
         />
         <q-btn v-close-popup label="cancel" />
       </div>
@@ -61,17 +61,22 @@ import { QIconPicker } from "@quasar/quasar-ui-qiconpicker";
 import lineIcons from "@quasar/quasar-ui-qiconpicker/dist/icon-set/line-awesome.umd.js";
 import { ref, watch } from "vue";
 const props = defineProps({
-  supply: Object,
+  modelValue: Object,
   isNew: Boolean,
 });
-defineEmits(["on-save"]);
-const title = ref(props.isNew ? "" : props.modelValue.label);
-const icon = ref(props.isNew ? "" : props.modelValue.icon);
+const emits = defineEmits(["update:modelValue"]);
+const model = ref(props.modelValue || { label: "", icon: "" });
 const filter = ref("");
 const showIconPicker = ref(false);
 const pagination = ref({
   itemsPerPage: 25,
   page: 0,
 });
-watch(icon, () => (showIconPicker.value = false));
+watch(
+  () => model.value.icon,
+  (m) => {
+    console.log("model changed!", m);
+    showIconPicker.value = false;
+  }
+);
 </script>

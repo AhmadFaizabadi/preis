@@ -1,14 +1,41 @@
 <template>
-  <q-scroll-area style="height: 70vh; max-width: 600px">
+  <div>
     <div class="q-pa-md">
-      <q-input
-        ref="filterRef"
-        dens
-        outlined=""
-        input-style="font-size: xx-small;"
-        v-model="filter"
-        label="Search - type in some letters ..."
-      >
+      <q-btn v-if="editable && selected" icon="menu" flat dense>
+        <q-menu auto-close>
+          <q-list style="min-width: 100px" class="q-pa-md">
+            <q-item
+              clickable
+              @click="editNode({ type: 'supply', isNew: true })"
+            >
+              <q-item-section thumbnail
+                ><q-icon name="category"
+              /></q-item-section>
+              <q-item-section>{{ $t("newCategory") }}</q-item-section>
+            </q-item>
+            <q-item clickable @click="editNode({ type: 'price', isNew: true })">
+              <q-item-section thumbnail><q-icon name="euro" /></q-item-section>
+              <q-item-section>{{ $t("newPrice") }}</q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item clickable @click="editNode({ isNew: false })">
+              <q-item-section thumbnail><q-icon name="edit" /></q-item-section>
+              <q-item-section>{{ $t("edit") }}</q-item-section>
+            </q-item>
+            <q-separator />
+            <q-item
+              clickable
+              @click="editNode({ type: 'price', isNew: false })"
+            >
+              <q-item-section thumbnail
+                ><q-icon name="delete"
+              /></q-item-section>
+              <q-item-section>{{ $t("delete") }}</q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
+      </q-btn>
+      <q-input ref="filterRef" dens v-model="filter" style="width: 250px">
         <template v-slot:append>
           <q-icon
             v-if="filter !== ''"
@@ -17,95 +44,72 @@
             @click="resetFilter"
           />
         </template>
-      </q-input>
-
-      <q-tree
-        ref="treeRef"
-        :nodes="supplies"
-        node-key="fullName"
-        accordion
-        :filter="filter"
-        :duration="10"
-        :filter-method="myFilterMethod"
-        v-model:selected="selected"
-      >
-        <template v-slot:default-header="prop">
-          <div :class="prop.node.children ? 'text-weight-bold' : ''">
-            <q-icon
-              :name="prop.node.icon"
-              class="q-mr-md"
-              size="xs"
-              :color="
-                prop.node.children
-                  ? 'deep-orange'
-                  : prop.node.unitValue
-                  ? 'green-14'
-                  : 'blue-14'
-              "
-            />{{
-              prop.node.unitValue
-                ? `🔸 ${prop.node.label} - ${prop.node.unitValue}💲 (${prop.node.unitName})`
-                : prop.node.label
-            }}
-            <q-popup-proxy v-if="editable" context-menu>
-              <div class="row q-gutter-sm bg-teal-11 text-black">
-                <q-btn flat dense icon="las la-folder-plus"
-                  ><q-tooltip>{{ $t("newCategory") }}</q-tooltip>
-                  <q-popup-proxy>
-                    <new-item
-                      is-new
-                      node-type="category"
-                      @on-save="onSave(prop.node, $event)"
-                    />
-                  </q-popup-proxy>
-                </q-btn>
-                <q-btn flat dense icon="las la-tag"
-                  ><q-tooltip>{{ $t("newPrice") }}</q-tooltip>
-                  <q-popup-proxy>
-                    <new-item
-                      is-new
-                      node-type="price"
-                      @on-save="onSave(prop.node, $event)"
-                    />
-                  </q-popup-proxy>
-                </q-btn>
-                <q-btn flat dense icon="las la-edit"
-                  ><q-tooltip>{{ $t("editTitle") }}</q-tooltip>
-                  <q-popup-proxy>
-                    <new-item
-                      :node-type="prop.node.price ? 'price' : 'category'"
-                      @on-save="onSave"
-                    />
-                  </q-popup-proxy>
-                </q-btn>
-                <q-btn
-                  flat
-                  dense
-                  icon="las la-trash"
-                  @click="onDelete(prop.node)"
-                  ><q-tooltip>{{
-                    $t("deleteCategoryOrService")
-                  }}</q-tooltip></q-btn
-                >
-              </div>
-            </q-popup-proxy>
-          </div>
+        <template v-slot:prepend>
+          <q-icon name="search" />
         </template>
-      </q-tree>
+      </q-input>
     </div>
+    <q-scroll-area style="height: 60vh; max-width: 600px">
+      <div class="q-pa-md">
+        <q-tree
+          ref="treeRef"
+          :nodes="supplies"
+          node-key="fullName"
+          accordion
+          :filter="filter"
+          :duration="10"
+          :filter-method="myFilterMethod"
+          v-model:selected="selected"
+        >
+          <template v-slot:default-header="prop">
+            <div :class="prop.node.children ? 'text-weight-bold' : ''">
+              <q-icon
+                :name="prop.node.icon"
+                class="q-mr-md"
+                size="xs"
+                :color="
+                  prop.node.children
+                    ? 'deep-orange'
+                    : prop.node.unitValue
+                    ? 'green-14'
+                    : 'blue-14'
+                "
+              />{{
+                prop.node.unitValue
+                  ? `🔸 ${prop.node.label} - ${prop.node.unitValue}€ (${prop.node.unitName})`
+                  : prop.node.label
+              }}
+            </div>
+          </template>
+        </q-tree>
+      </div>
+    </q-scroll-area>
     <div v-if="!editable" class="justify-end">
       <q-btn flat v-close-popup :label="$t('close')" />
     </div>
-  </q-scroll-area>
+    <q-dialog v-model="supplyFormVisible">
+      <new-supply
+        :model-value="theModel"
+        :is-new="isNew"
+        @update:modelValue="onUpdate($event)"
+    /></q-dialog>
+    <q-dialog v-model="priceFormVisible">
+      <new-price
+        :model-value="theModel"
+        :is-new="isNew"
+        @update:modelValue="onUpdate($event)"
+    /></q-dialog>
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useQuasar } from "quasar";
 import { useI18n } from "vue-i18n";
 import { useInvoiceStore } from "src/stores/invoice";
 import { storeToRefs } from "pinia";
-import NewItem from "src/components/NewItem.vue";
+import NewSupply from "src/components/NewSupply.vue";
+import NewPrice from "src/components/NewPrice.vue";
 defineProps({
   editable: {
     type: Boolean,
@@ -121,7 +125,10 @@ const filter = ref("");
 const selected = ref("");
 const filterRef = ref(null);
 const treeRef = ref(null);
-
+const isNew = ref(false);
+const theModel = ref();
+const supplyFormVisible = ref(false);
+const priceFormVisible = ref(false);
 const myFilterMethod = (node, filter) => {
   const filt = filter.toLowerCase().split(" ");
   const found = filt.every((e) => node.fullName.indexOf(e) > -1);
@@ -138,7 +145,6 @@ const resetFilter = () => {
   treeRef.value.collapseAll();
   filterRef.value.focus();
 };
-
 function findAllParents(tree, nodeFullName, parentList = []) {
   for (const item of tree) {
     if (item.fullName === nodeFullName) {
@@ -157,33 +163,36 @@ function findAllParents(tree, nodeFullName, parentList = []) {
 
 defineExpose({ selected });
 
-const onSave = (parent, e) => {
-  if (!("children" in parent)) parent.children = [];
-  parent.children.push({
-    ...e.event,
-    fullName: parent.fullName + "-" + e.event.label.toLowerCase(),
-  });
-  treeRef.value.setExpanded(parent.fullName, true);
+const onSave = (node) => {
+  console.log("on save called", node);
+  if (node.isNew) {
+    if (!("children" in node)) node.children = [];
+    node.children.push({
+      ...e.event,
+      fullName: node.fullName + "-" + e.event.label.toLowerCase(),
+    });
+  }
+  treeRef.value.setExpanded(node.fullName, true);
   invoiceStore.saveData("base", true);
 };
-const onEdit = (node, updated) => {
-  node.label = updated.label;
-  node.icon = updated.icon;
-  const p = findAllParents(supplies.value, node.fullName);
-  if (p.length > 0) treeRef.value.setExpanded(p[0], true);
-  invoiceStore.saveData("base", true);
-};
-
-const onNew = (parent, node) => {
-  if (!("children" in parent)) parent.children = [];
-  parent.children.push({
-    ...node,
-    fullName: parent.fullName + "-" + node.label.toLowerCase(),
-  });
-  invoiceStore.saveData("base", true);
-  const p = findAllParents(supplies.value, parent.fullName);
-  if (p.length > 0) treeRef.value.setExpanded(p[0], true);
-  treeRef.value.setExpanded(parent.fullName, true);
+const editNode = (node) => {
+  if (!node.isNew) {
+    const snode = treeRef.value.getNodeByKey(selected.value);
+    node.type = snode?.unitValue ? "price" : "supply";
+    node.model = snode;
+  } else {
+    node.model =
+      node.type === "supply"
+        ? { label: "", icon: "" }
+        : { label: "", unitName: "", unitValue: 0 };
+  }
+  isNew.value = node.isNew;
+  theModel.value = node.model;
+  if (node.type === "supply") {
+    supplyFormVisible.value = true;
+  } else if (node.type === "price") {
+    priceFormVisible.value = true;
+  }
 };
 
 function onDelete(node) {
@@ -217,6 +226,20 @@ onMounted(async () => {
     await invoiceStore.get("base");
   } catch {}
 });
+const onUpdate = (u) => {
+  theModel.value.label = u.label;
+  ({ ...theModel.value } = u);
+  const parent = treeRef.value.getNodeByKey(selected.value);
+  theModel.value.fullName =
+    parent.fullName + "-" + theModel.value.label.toLowerCase();
+  if (isNew.value) {
+    if (!("children" in parent)) parent.children = [];
+    parent.children.push({ ...theModel.value });
+  }
+  const p = findAllParents(supplies.value, theModel.value.fullName);
+  if (p?.length > 0) treeRef.value.setExpanded(p[0], true);
+  invoiceStore.saveData("base", true);
+};
 </script>
 <style lang="sass" scoped>
 

@@ -38,7 +38,7 @@
     <q-card-actions class="justify-end">
       <q-btn
         v-close-popup
-        @click="$emit('on-save', priceModel)"
+        @click="$emit('update:model-value', priceModel)"
         :label="$t('save')"
       />
       <q-btn :label="$t('cancel')" v-close-popup />
@@ -50,19 +50,13 @@
 import { ref } from "vue";
 
 const props = defineProps({
-  price: {
-    type: Object,
-    required: false,
-  },
-  isNew: {
-    type: Boolean,
-    required: false,
-  },
+  modelValue: Object,
+  isNew: Boolean,
 });
 const priceModel = ref(
-  props.price || { label: "", unitName: "", unitValue: 0 }
+  props.modelValue || { label: "", unitName: "", unitValue: 0 }
 );
-defineEmits(["on-save"]);
+defineEmits(["update:model-value"]);
 </script>
 
 <style lang="sass" scoped>

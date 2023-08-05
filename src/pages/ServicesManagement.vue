@@ -1,6 +1,10 @@
 <template>
   <q-page padding>
-    <q-banner>{{ $t("serviceManagement") }}</q-banner>
+    <q-banner
+      ><div class="text-h5 text-center">
+        {{ $t("serviceManagement") }}
+      </div></q-banner
+    >
     <div class="row">
       <supply-tree editable class="full-width" />
     </div>

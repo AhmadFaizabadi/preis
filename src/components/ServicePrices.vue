@@ -11,7 +11,7 @@
             <q-btn flat dense icon="las la-edit"
               ><q-tooltip>{{ $t("editPrice") }}</q-tooltip>
               <q-popup-proxy>
-                <new-price :price="p" @on-save="onEdit($event)" />
+                <new-price :model-value="p" @on-save="onEdit($event)" />
               </q-popup-proxy>
             </q-btn>
             <q-btn flat dense icon="las la-trash" @click="onDelete(p)"
