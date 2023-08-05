@@ -17,7 +17,7 @@
             <q-popup-proxy
               v-model="showIconPicker"
               class="column justify-center items-center"
-              style="height: 600px"
+              style="height: 400px"
             >
               <div class="column items-center">
                 <q-input
@@ -34,7 +34,7 @@
                   :filter="filter"
                   :icons="lineIcons.icons"
                   tooltips
-                  style="height: 300px; width: 300px"
+                  style="height: 220px; width: 300px"
                 />
               </div>
             </q-popup-proxy>

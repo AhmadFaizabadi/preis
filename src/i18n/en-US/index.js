@@ -29,5 +29,7 @@ export default {
   priceName:"Price Name",
   unitName:"Unit Name",
   unitValue:"Unit Value",
-  signup:"Sign up"
+  signup:"Sign up",
+  invoiceIssuance: "Invoice Issuance",
+  invoiceIssuanceCaption: "Set up a new invoice",
 }

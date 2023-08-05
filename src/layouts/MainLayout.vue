@@ -38,7 +38,6 @@
 <script>
 import { defineComponent, ref } from "vue";
 import EssentialLink from "components/EssentialLink.vue";
-import { useI18n } from "vue-i18n";
 
 export default defineComponent({
   name: "MainLayout",
@@ -49,19 +48,24 @@ export default defineComponent({
 
   setup() {
     const leftDrawerOpen = ref(false);
-    const { t } = useI18n();
     const linksList = [
       {
         title: "signup",
-        caption: t("signup"),
+        caption: "signup",
         icon: "las la-user-plus",
         link: "/register",
       },
       {
         title: "serviceManagement",
         caption: "serviceManagementCaption",
-        icon: "tasks",
+        icon: "account_tree",
         link: "/services",
+      },
+      {
+        title: "invoiceIssuance",
+        caption: "invoiceIssuanceCaption",
+        icon: "post_add",
+        link: "/invoice",
       },
     ];
 

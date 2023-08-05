@@ -19,7 +19,6 @@ export const useInvoiceStore = defineStore("invoice", {
     supplies: LocalStorage.getItem("supplies") || [
       { fullName: "unitec", label: "UNITEC", children: [] },
     ],
-    prices: LocalStorage.getItem("prices") || [],
     customers: LocalStorage.getItem("customers") || [],
     invoices: LocalStorage.getItem("invoices") || [],
     user: LocalStorage.getItem("user") || {},
@@ -37,7 +36,6 @@ export const useInvoiceStore = defineStore("invoice", {
           if (data.version > this.baseVersion) {
             this.baseVersion = data.version;
             this.supplies = JSON.parse(data.supplies);
-            this.prices = JSON.parse(data.prices);
             this.saveData("base", false);
           }
         }
@@ -51,7 +49,6 @@ export const useInvoiceStore = defineStore("invoice", {
           if (data.version > this.invoiceVersion) {
             this.invoiceVersion = data.version;
             this.supplies = JSON.parse(data.supplies);
-            this.prices = JSON.parse(data.prices);
             this.saveData("invoice", false);
           }
         }
@@ -63,7 +60,6 @@ export const useInvoiceStore = defineStore("invoice", {
         responseBase = await api.post("invoice/save-base-data", {
           version: this.baseVersion,
           supplies: JSON.stringify(this.supplies),
-          prices: JSON.stringify(this.prices),
         });
       }
       if (dataType === "*" || dataType === "invoice") {
@@ -81,7 +77,6 @@ export const useInvoiceStore = defineStore("invoice", {
         this.supplies = LocalStorage.getItem("supplies") || [
           { fullName: "unitec", label: "UNITEC", children: [] },
         ];
-        this.prices = LocalStorage.getItem("prices") || [];
       }
       if (dataType === "*" || dataType === "invoice") {
         this.invoiceVersion = LocalStorage.getItem("invoiceVersion") || 0;
@@ -93,7 +88,6 @@ export const useInvoiceStore = defineStore("invoice", {
       if (dataType === "*" || dataType === "base") {
         LocalStorage.set("baseVersion", this.baseVersion);
         LocalStorage.set("supplies", this.supplies);
-        LocalStorage.set("prices", this.prices);
       }
       if (dataType === "*" || dataType === "invoice") {
         LocalStorage.set("invoiceVersion", this.invoiceVersion);

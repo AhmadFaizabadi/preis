@@ -23,10 +23,7 @@
               <q-item-section>{{ $t("edit") }}</q-item-section>
             </q-item>
             <q-separator />
-            <q-item
-              clickable
-              @click="editNode({ type: 'price', isNew: false })"
-            >
+            <q-item clickable @click="onDelete">
               <q-item-section thumbnail
                 ><q-icon name="delete"
               /></q-item-section>
@@ -142,7 +139,7 @@ const myFilterMethod = (node, filter) => {
 };
 const resetFilter = () => {
   filter.value = "";
-  treeRef.value.collapseAll();
+  // treeRef.value.collapseAll();
   filterRef.value.focus();
 };
 function findAllParents(tree, nodeFullName, parentList = []) {
@@ -163,18 +160,6 @@ function findAllParents(tree, nodeFullName, parentList = []) {
 
 defineExpose({ selected });
 
-const onSave = (node) => {
-  console.log("on save called", node);
-  if (node.isNew) {
-    if (!("children" in node)) node.children = [];
-    node.children.push({
-      ...e.event,
-      fullName: node.fullName + "-" + e.event.label.toLowerCase(),
-    });
-  }
-  treeRef.value.setExpanded(node.fullName, true);
-  invoiceStore.saveData("base", true);
-};
 const editNode = (node) => {
   if (!node.isNew) {
     const snode = treeRef.value.getNodeByKey(selected.value);
@@ -195,7 +180,9 @@ const editNode = (node) => {
   }
 };
 
-function onDelete(node) {
+function onDelete() {
+  const node = treeRef.value.getNodeByKey(selected.value);
+  if (!node) return;
   let msg = "children" in node ? t("nodeHasChildRemovingWarning") : "";
   msg += t("areYouSureForDeletion");
   $q.dialog({
@@ -204,7 +191,7 @@ function onDelete(node) {
     cancel: true,
     persistent: true,
   }).onOk(() => {
-    const p = findAllParents(supplies, node.fullName);
+    const p = findAllParents(supplies.value, node.fullName);
     if (p.length > 0) {
       const children = treeRef.value.getNodeByKey(p.at(-1)).children;
       children.splice(
@@ -237,7 +224,7 @@ const onUpdate = (u) => {
     parent.children.push({ ...theModel.value });
   }
   const p = findAllParents(supplies.value, theModel.value.fullName);
-  if (p?.length > 0) treeRef.value.setExpanded(p[0], true);
+  if (p?.length > 0) treeRef.value.setExpanded(p.at(-1), true);
   invoiceStore.saveData("base", true);
 };
 </script>
