@@ -35,6 +35,7 @@
       </q-card-section>
       <q-card-section>
         <q-list>
+          <q-item-label>{{ $t("address") }}</q-item-label>
           <template v-for="item in model.items" :key="item.service.fullName">
             <q-item clickable v-ripple>
               <q-item-section>
@@ -52,7 +53,7 @@
           </template>
           <q-item clickable v-ripple>
             <q-item-section>
-              {{ $t("newItem") }}
+              {{ $t("newAddress") }}
             </q-item-section>
             <q-item-section side>
               <q-icon name="las la-plus-circle" color="green" />
@@ -81,10 +82,15 @@
 
 <script setup>
 import { ref } from "vue";
+import { date } from "quasar";
 import Customer from "src/components/Customer.vue";
-const props = defineProps({ modelValue: Object });
+const props = defineProps({ modelValue: Object, isNew: Boolean });
 const model = ref(
-  props.modelValue || { date: undefined, customer: undefined, items: [] }
+  props.modelValue || {
+    date: date.formatDate(Date.now(), "YYYY/MM/DD"),
+    customer: { name: "", phone: "", email: "", address: [] },
+    items: [],
+  }
 );
 </script>
 
