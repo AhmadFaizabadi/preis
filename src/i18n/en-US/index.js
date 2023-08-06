@@ -37,9 +37,13 @@ export default {
   customer: "Customer",
   address:"Address",
   newAddress:"New address",
+  editAddress:"Edit address",
+  deleteAddress:"Delete address",
   newCustomer: "New Customer",
   editCustomer: "Edit Customer",
   phone:"Phone",
   email:"Email",
   name:"Name",
+  close:"Close",
+  postalCode: "Postal Code"
 }

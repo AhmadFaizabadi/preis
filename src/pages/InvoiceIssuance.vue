@@ -35,7 +35,6 @@
       </q-card-section>
       <q-card-section>
         <q-list>
-          <q-item-label>{{ $t("address") }}</q-item-label>
           <template v-for="item in model.items" :key="item.service.fullName">
             <q-item clickable v-ripple>
               <q-item-section>
@@ -51,21 +50,6 @@
             </q-item>
             <q-separator />
           </template>
-          <q-item clickable v-ripple>
-            <q-item-section>
-              {{ $t("newAddress") }}
-            </q-item-section>
-            <q-item-section side>
-              <q-icon name="las la-plus-circle" color="green" />
-            </q-item-section>
-            <q-popup-proxy class="fixed-center">
-              <new-address
-                :model-value="newAddress"
-                @update:model-value="model.push($event)"
-                is-new
-              />
-            </q-popup-proxy>
-          </q-item>
         </q-list>
       </q-card-section>
       <q-card-actions class="justify-end">
@@ -88,7 +72,6 @@ const props = defineProps({ modelValue: Object, isNew: Boolean });
 const model = ref(
   props.modelValue || {
     date: date.formatDate(Date.now(), "YYYY/MM/DD"),
-    customer: { name: "", phone: "", email: "", address: [] },
     items: [],
   }
 );

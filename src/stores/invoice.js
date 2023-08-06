@@ -16,6 +16,7 @@ export const useInvoiceStore = defineStore("invoice", {
   state: () => ({
     baseVersion: LocalStorage.getItem("baseVersion") || 0,
     invoiceVersion: LocalStorage.getItem("invoiceVersion") || 0,
+    customerVersion: LocalStorage.getItem("customerVersion") || 0,
     supplies: LocalStorage.getItem("supplies") || [
       { fullName: "unitec", label: "UNITEC", children: [] },
     ],
@@ -81,6 +82,9 @@ export const useInvoiceStore = defineStore("invoice", {
       if (dataType === "*" || dataType === "invoice") {
         this.invoiceVersion = LocalStorage.getItem("invoiceVersion") || 0;
         this.invoices = LocalStorage.getItem("invoices") || [];
+      }
+      if (dataType === "*" || dataType === "customer") {
+        this.invoiceVersion = LocalStorage.getItem("customerVersion") || 0;
         this.customers = LocalStorage.getItem("customers") || [];
       }
     },
@@ -92,6 +96,9 @@ export const useInvoiceStore = defineStore("invoice", {
       if (dataType === "*" || dataType === "invoice") {
         LocalStorage.set("invoiceVersion", this.invoiceVersion);
         LocalStorage.set("invoices", this.invoices);
+      }
+      if (dataType === "*" || dataType === "customer") {
+        LocalStorage.set("customerVersion", this.customerVersion);
         LocalStorage.set("customers", this.customers);
       }
       if (postIt){
