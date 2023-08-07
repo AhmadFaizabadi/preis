@@ -24,6 +24,7 @@ const getMembers = (members) => {
     return m;
   }).concat(children.length ? getMembers(children) : children);
 };
+
 export const useInvoiceStore = defineStore("invoice", {
   state: () => ({
     baseVersion: LocalStorage.getItem("baseVersion") || 0,
@@ -124,5 +125,14 @@ export const useInvoiceStore = defineStore("invoice", {
         );
       }
     },
+    uuidv4() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+      .replace(/[xy]/g, function (c) {
+          const r = Math.random() * 16 | 0,
+              v = c == 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+      });
+    }
+
   },
 });

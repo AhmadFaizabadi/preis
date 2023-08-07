@@ -13,6 +13,7 @@
           :label="$t('name')"
           stack-label
           autofocus
+          @blur="capitalizeName"
         />
         <q-input
           name="phone"
@@ -55,5 +56,13 @@ const model = ref({ ...props.modelValue });
 const emit = defineEmits(["update:model-value"]);
 const onSubmit = () => {
   emit("update:model-value", model.value);
+};
+const capitalizeName = () => {
+  if (!model.value?.name) return;
+  const name = model.value.name
+    .split(" ")
+    .reduce((t, c) => (t += c.charAt(0).toUpperCase() + c.slice(1) + " "), "")
+    .trim();
+  model.value.name = name;
 };
 </script>

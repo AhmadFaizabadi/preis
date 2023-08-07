@@ -14,14 +14,14 @@
       filled
       use-input
       option-value="name"
-      :model-value="model"
+      v-model="model"
       :options="customers"
       stack-label
       :label="$t('customer')"
       :display-value="
         'name' in model
           ? `${model?.name} (${model?.selectedAddress?.name})`
-          : 'xxx'
+          : ''
       "
       @update:model-value="$emit('update:model-value', $event)"
       @new-value="onNewCustomer($event)"

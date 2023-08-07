@@ -51,5 +51,8 @@ export default {
   close:"Close",
   postalCode: "Postal Code",
   invoiceItems: "Invoice Items",
-  newItem: "New Item"
+  newItem: "New Item",
+  select:"Select",
+  entity:"Entity",
+  note:"Note"
 }

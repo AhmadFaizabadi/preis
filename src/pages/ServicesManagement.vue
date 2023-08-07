@@ -1,12 +1,16 @@
 <template>
   <q-page padding>
-    <q-banner
-      ><div class="text-h5 text-center">
-        {{ $t("serviceManagement") }}
-      </div></q-banner
-    >
-    <div class="row">
-      <supply-tree editable class="full-width" />
+    <div class="full-screen column">
+      <div class="col">
+        <q-banner
+          ><div class="text-h5 text-center">
+            {{ $t("serviceManagement") }}
+          </div></q-banner
+        >
+        <div class="col-auto">
+          <supply-tree editable />
+        </div>
+      </div>
     </div>
   </q-page>
 </template>
