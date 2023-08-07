@@ -147,4 +147,7 @@ const editIt = (item) => {
 <style lang="sass" scoped>
 .my-card
   max-width: 650px
+#invoice-title
+  background-image: url('assets/invoice2.png')
+  background-repeat: no-repeat
 </style>
