@@ -26,6 +26,8 @@ export default {
   newPrice:"New Price",
   editPrice:"Edit Price",
   save:"Save",
+  edit:"Edit",
+  delete:"Delete",
   cancel:"Cancel",
   priceName:"Price Name",
   unitName:"Unit Name",
@@ -47,5 +49,7 @@ export default {
   email:"Email",
   name:"Name",
   close:"Close",
-  postalCode: "Postal Code"
+  postalCode: "Postal Code",
+  invoiceItems: "Invoice Items",
+  newItem: "New Item"
 }

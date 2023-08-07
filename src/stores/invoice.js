@@ -12,6 +12,18 @@ function deepScan(nodes,id){
       if (child) return child
     }
 }
+const getMembers = (members) => {
+  let children = [];
+
+  return members.map(mem => {
+    const m = {...mem};
+    if (m.children && m.children.length) {
+      children = [...children, ...m.children];
+    }
+    delete m.children; // this will not affect the original array object
+    return m;
+  }).concat(children.length ? getMembers(children) : children);
+};
 export const useInvoiceStore = defineStore("invoice", {
   state: () => ({
     baseVersion: LocalStorage.getItem("baseVersion") || 0,
@@ -25,7 +37,9 @@ export const useInvoiceStore = defineStore("invoice", {
     user: LocalStorage.getItem("user") || {},
   }),
 
-  getters: {},
+  getters: {
+    flatSupplies:(state)=>getMembers(state.supplies[0].children).filter(f=>f.unitValue)
+  },
 
   actions: {
     async get(dataType) {

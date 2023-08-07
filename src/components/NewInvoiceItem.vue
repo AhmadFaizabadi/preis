@@ -4,17 +4,15 @@
       <q-select
         filled
         v-model="model"
-        :options="options"
+        :options="flatSupplies"
         stack-label
-        :label="$t('serviceName')"
-        :display-value="`${
-          model ? model.category + ' - ' + model.priceName : '*none*'
-        }`"
+        :label="$t('supplyName')"
+        :display-value="model?.fullName?.split('-')[1] + ' - ' + model.label"
       >
-        <template v-slot:append>
-          <q-icon class="cursor-pointer" name="la-search">
-            <q-popup-proxy v-model="showTree">
-              <services-tree @on-select="onSelect" />
+        <template v-slot:after>
+          <q-icon class="cursor-pointer" name="search">
+            <q-popup-proxy>
+              <supplies-tree @on-select="onSelect" />
             </q-popup-proxy>
           </q-icon>
         </template>
@@ -32,18 +30,15 @@
 </template>
 
 <script setup>
-import ServicesTree from "src/components/SupplyTree.vue";
-const props = withDefaults(defineProps({ modelValue: Object }), {
-  modelValue: {
-    service: null,
-    count: 0,
-  },
-});
+import { ref } from "vue";
+import SuppliesTree from "src/components/SupplyTree.vue";
+import { useInvoiceStore } from "src/stores/invoice";
 
-const onSelect = (e) => {
-  model.service = e.service;
-  model.price = e.price;
-};
+const { flatSupplies } = useInvoiceStore();
+
+const props = defineProps({ modelValue: Object, isNew: Boolean });
+defineEmits(["update:model-value"]);
+const model = ref(props.modelValue ? { ...props.modelValue } : {});
 </script>
 
 <style lang="sass" scoped>

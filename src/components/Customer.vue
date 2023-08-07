@@ -21,7 +21,7 @@
       :display-value="
         'name' in model
           ? `${model?.name} (${model?.selectedAddress?.name})`
-          : ''
+          : 'xxx'
       "
       @update:model-value="$emit('update:model-value', $event)"
       @new-value="onNewCustomer($event)"

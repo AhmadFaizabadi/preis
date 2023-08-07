@@ -14,12 +14,11 @@
       <q-input v-model="model.icon" label="Icon" clearable>
         <template #append>
           <q-icon name="extension" class="cursor-pointer">
-            <q-popup-proxy
-              v-model="showIconPicker"
-              class="column justify-center items-center"
-              style="height: 400px"
-            >
-              <div class="column items-center">
+            <q-popup-proxy v-model="showIconPicker">
+              <div
+                class="items-center q-gutter-md bg-cyan"
+                style="height: 400px"
+              >
                 <q-input
                   v-model="filter"
                   label="Filter"
@@ -64,7 +63,7 @@ const props = defineProps({
   modelValue: Object,
   isNew: Boolean,
 });
-const emits = defineEmits(["update:modelValue"]);
+const emits = defineEmits(["update:model-value"]);
 const model = ref(props.modelValue || { label: "", icon: "" });
 const filter = ref("");
 const showIconPicker = ref(false);
@@ -75,7 +74,6 @@ const pagination = ref({
 watch(
   () => model.value.icon,
   (m) => {
-    console.log("model changed!", m);
     showIconPicker.value = false;
   }
 );

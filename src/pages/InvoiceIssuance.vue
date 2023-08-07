@@ -1,5 +1,8 @@
 <template>
   <q-page padding>
+    <q-dialog v-model="showNewItem">
+      <new-invoice-item />
+    </q-dialog>
     <q-card class="my-card bg-grey-12 q-pa-md">
       <q-card-section>
         <div class="text-h6">
@@ -35,6 +38,13 @@
       </q-card-section>
       <q-card-section>
         <q-list>
+          <q-item-label>{{ $t("invoiceItems") }}</q-item-label>
+          <q-item clickable v-ripple @click="showNewItem = true">
+            <q-item-section avatar
+              ><q-icon name="add" color="green" />
+            </q-item-section>
+            <q-item-section>{{ $t("newItem") }}</q-item-section>
+          </q-item>
           <template v-for="item in model.items" :key="item.service.fullName">
             <q-item clickable v-ripple>
               <q-item-section>
@@ -68,6 +78,8 @@
 import { ref } from "vue";
 import { date } from "quasar";
 import Customer from "src/components/Customer.vue";
+import NewInvoiceItem from "src/components/NewInvoiceItem.vue";
+
 const props = defineProps({ modelValue: Object, isNew: Boolean });
 const model = ref(
   props.modelValue || {
@@ -75,6 +87,7 @@ const model = ref(
     items: [],
   }
 );
+const showNewItem = ref(false);
 </script>
 
 <style lang="sass" scoped>

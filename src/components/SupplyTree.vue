@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="q-pa-md">
+  <q-card>
+    <q-card-section class="q-pa-md">
       <q-btn v-if="editable && selected" icon="menu" flat dense>
         <q-menu auto-close>
           <q-list style="min-width: 100px" class="q-pa-md">
@@ -32,7 +32,13 @@
           </q-list>
         </q-menu>
       </q-btn>
-      <q-input ref="filterRef" dens v-model="filter" style="width: 250px">
+      <q-input
+        ref="filterRef"
+        autofocus
+        dens
+        v-model="filter"
+        style="width: 250px"
+      >
         <template v-slot:append>
           <q-icon
             v-if="filter !== ''"
@@ -45,68 +51,64 @@
           <q-icon name="search" />
         </template>
       </q-input>
-    </div>
-    <q-scroll-area style="height: 60vh; max-width: 600px">
-      <div class="q-pa-md">
-        <q-tree
-          ref="treeRef"
-          :nodes="supplies"
-          node-key="fullName"
-          accordion
-          :filter="filter"
-          :duration="10"
-          :filter-method="myFilterMethod"
-          v-model:selected="selected"
-        >
-          <template v-slot:default-header="prop">
-            <div :class="prop.node.children ? 'text-weight-bold' : ''">
-              <q-icon
-                :name="prop.node.icon"
-                class="q-mr-md"
-                size="xs"
-                :color="
-                  prop.node.children
-                    ? 'deep-orange'
-                    : prop.node.unitValue
-                    ? 'green-14'
-                    : 'blue-14'
-                "
-              />{{
-                prop.node.unitValue
-                  ? `🔸 ${prop.node.label} - ${prop.node.unitValue}€ (${prop.node.unitName})`
-                  : prop.node.label
-              }}
-            </div>
-          </template>
-        </q-tree>
-      </div>
-    </q-scroll-area>
-    <div v-if="!editable" class="justify-end">
+    </q-card-section>
+    <q-card-section>
+      <q-scroll-area style="height: 60vh; max-width: 600px">
+        <div class="q-pa-md">
+          <q-tree
+            ref="treeRef"
+            :nodes="supplies"
+            node-key="fullName"
+            accordion
+            :filter="filter"
+            :duration="10"
+            :filter-method="myFilterMethod"
+            v-model:selected="selected"
+          >
+            <template v-slot:default-header="prop">
+              <div :class="prop.node.children ? 'text-weight-bold' : ''">
+                <q-icon
+                  :name="prop.node.icon"
+                  class="q-mr-md"
+                  size="xs"
+                  :color="
+                    prop.node.children
+                      ? 'deep-orange'
+                      : prop.node.unitValue
+                      ? 'green-14'
+                      : 'blue-14'
+                  "
+                />{{
+                  prop.node.unitValue
+                    ? `🔸 ${prop.node.label} - ${prop.node.unitValue}€ (${prop.node.unitName})`
+                    : prop.node.label
+                }}
+              </div>
+            </template>
+          </q-tree>
+        </div>
+      </q-scroll-area>
+    </q-card-section>
+    <q-card-actions v-if="!editable" class="justify-end">
       <q-btn flat v-close-popup :label="$t('close')" />
-    </div>
+    </q-card-actions>
     <q-dialog v-model="supplyFormVisible">
       <new-supply
         :model-value="theModel"
         :is-new="isNew"
         @update:modelValue="onUpdate($event)"
     /></q-dialog>
-    <q-dialog v-model="priceFormVisible">
-      <new-price
-        :model-value="theModel"
-        :is-new="isNew"
-        @update:modelValue="onUpdate($event)"
-    /></q-dialog>
-  </div>
+  </q-card>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { useQuasar } from "quasar";
 import { useI18n } from "vue-i18n";
 import { useInvoiceStore } from "src/stores/invoice";
 import { storeToRefs } from "pinia";
 import NewSupply from "src/components/NewSupply.vue";
-import NewPrice from "src/components/NewPrice.vue";
+
 defineProps({
   editable: {
     type: Boolean,
@@ -125,7 +127,6 @@ const treeRef = ref(null);
 const isNew = ref(false);
 const theModel = ref();
 const supplyFormVisible = ref(false);
-const priceFormVisible = ref(false);
 const myFilterMethod = (node, filter) => {
   const filt = filter.toLowerCase().split(" ");
   const found = filt.every((e) => node.fullName.indexOf(e) > -1);
