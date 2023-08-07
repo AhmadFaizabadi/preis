@@ -14,15 +14,14 @@
       filled
       emit-value
       :model-value="selected"
-      option-value="name"
       :option-label="(o) => `${o?.name}: ${o?.address}`"
       :options="addresses"
       stack-label
       :label="$t('address')"
-      :display-value="selected"
+      :display-value="selected?.name"
       @new-value="onNewAddress($event)"
       @update:model-value="$emit('update:selected', $event)"
-      ><template v-slot:prepend>
+      ><template v-slot:before>
         <q-icon name="add_business" class="cursor-pointer" @click="onNewAddress"
           ><q-tooltip>{{ $t("newAddress") }}</q-tooltip></q-icon
         >
@@ -71,7 +70,7 @@ import { ref } from "vue";
 import NewAddress from "src/components/NewAddress.vue";
 const props = defineProps({
   addresses: Array,
-  selected: String,
+  selected: Object,
 });
 const emit = defineEmits(["update:addresses", "update:selected"]);
 const isNew = ref(true);
@@ -97,6 +96,8 @@ const onAddressUpdated = (a) => {
       for (let o of Object.entries(a)) found[o[0]] = o[1];
     }
   }
+  console.log("address updated", isNew.value, a, newarray);
+  emit("update:selected", { ...a });
   emit("update:addresses", newarray);
 };
 </script>

@@ -53,7 +53,7 @@ const props = defineProps({
   isNew: Boolean,
 });
 defineEmits(["update:model-value"]);
-const model = ref(props.isNew ? {} : { ...props.modelValue });
+const model = ref(props.isNew ? { name: "home" } : { ...props.modelValue });
 </script>
 
 <style lang="sass" scoped>
