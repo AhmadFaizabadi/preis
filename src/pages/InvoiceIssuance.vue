@@ -14,8 +14,15 @@
         </div>
       </q-card-section>
       <q-card-section>
-        <div class="row q-gutter-md justify-around no-wrap">
-          <q-input filled v-model="model.date" mask="date" :rules="['date']">
+        <div class="column q-gutter-sm">
+          <q-input
+            class="self-end"
+            filled
+            v-model="model.date"
+            mask="date"
+            :rules="['date']"
+            style="max-width: 170px"
+          >
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy
@@ -42,7 +49,12 @@
       </q-card-section>
       <q-card-section>
         <q-list>
-          <q-item-label>{{ $t("invoiceItems") }}</q-item-label>
+          <q-item-label
+            >{{ $t("invoiceItems") }}
+            {{
+              `${model.items.length} (${total.toLocaleString()}€)`
+            }}</q-item-label
+          >
           <q-item clickable v-ripple @click="showNewItem = true">
             <q-item-section avatar
               ><q-icon name="add" color="green" />
@@ -50,7 +62,7 @@
             <q-item-section>{{ $t("newItem") }}</q-item-section>
           </q-item>
           <template v-for="item in model.items" :key="item.id">
-            <q-item clickable v-ripple>
+            <q-item clickable v-ripple @click="editIt(item)">
               <q-item-section>
                 <q-item-label overline>{{
                   item.supply.fullName.split("-").slice(1, -2).join("-")
@@ -61,8 +73,18 @@
                     `${item.entity}(${item.supply.unitName}) x ${item.supply.unitValue}€`
                   }}
                 </q-item-label>
+                <q-item-label caption lines="3">{{ item.note }}</q-item-label>
               </q-item-section>
-              <q-item-section avatar></q-item-section>
+              <q-item-section avatar
+                ><q-icon :name="item.supply.icon" size="lg"
+              /></q-item-section>
+              <q-item-section side>
+                <q-item-label header
+                  >{{
+                    (item.entity * item.supply.unitValue).toLocaleString()
+                  }}€</q-item-label
+                >
+              </q-item-section>
             </q-item>
             <q-separator />
           </template>
@@ -81,7 +103,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { date } from "quasar";
 import Customer from "src/components/Customer.vue";
 import NewInvoiceItem from "src/components/NewInvoiceItem.vue";
@@ -110,6 +132,15 @@ const onUpdate = (u) => {
       model.value.items[foundIndex] = { ...u };
     }
   }
+};
+const total = computed(() =>
+  model.value.items.reduce((t, c) => (t += c.entity * c.supply.unitValue), 0)
+);
+
+const editIt = (item) => {
+  newItem.value = item;
+  isNewItem.value = false;
+  showNewItem.value = true;
 };
 </script>
 
