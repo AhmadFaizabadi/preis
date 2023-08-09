@@ -7,6 +7,7 @@ const routes = [
       { path: '', component: () => import('src/pages/Home.vue') },
       { path: '/services', component: () => import('pages/ServicesManagement.vue') },
       { path: '/invoice',props:{isNew:true}, component: () => import('src/pages/InvoiceIssuance.vue') },
+      { path: '/list-invoices',component: () => import('src/pages/ListInvoices.vue') },
       { path: '/login', component: () => import('pages/Login.vue') },
       { path: '/register', component: () => import('src/pages/UserRegister.vue') },
     ]

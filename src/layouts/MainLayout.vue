@@ -67,6 +67,12 @@ export default defineComponent({
         icon: "post_add",
         link: "/invoice",
       },
+      {
+        title: "listInvoices",
+        caption: "listInvoicesCaption",
+        icon: "toc",
+        link: "/list-invoices",
+      },
     ];
 
     return {

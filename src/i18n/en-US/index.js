@@ -38,6 +38,8 @@ export default {
   signup: "Sign up",
   invoiceIssuance: "Invoice Issuance",
   invoiceIssuanceCaption: "Set up a new invoice",
+  listInvoices:"List Invoices",
+  listInvoicesCaption:"invoices history",
   newInvoice: "Invoice Issuance",
   editInvoice: "Edit Invoice",
   customer: "Customer",
