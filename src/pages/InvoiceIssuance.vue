@@ -4,7 +4,7 @@
       <new-invoice-item
         :model-value="newItem"
         :is-new="isNewItem"
-        @update:model-value="onUpdate"
+        @update:model-value="onUpdateItem"
       />
     </q-dialog>
     <q-card class="my-card bg-grey-12 q-pa-md scroll">
@@ -54,7 +54,7 @@
               `${model.items.length} (${total.toLocaleString()}€)`
             }}</q-item-label
           >
-          <q-item clickable v-ripple @click="showNewItem = true">
+          <q-item clickable v-ripple @click="onNewItem">
             <q-item-section avatar
               ><q-icon name="add" color="green" />
             </q-item-section>
@@ -62,12 +62,17 @@
           </q-item>
           <div class="scroll q-ml-xl q-pl-xl">
             <template v-for="item in model.items" :key="item.id">
-              <q-item clickable v-ripple @click="editIt(item)">
+              <q-item
+                clickable
+                @click="selectedId = item.id"
+                :active="item.id === selectedId"
+                active-class="bg-grey-4"
+              >
                 <q-item-section>
-                  <q-item-label overline>{{
-                    item.supply.fullName.split("-").slice(1, -2).join("-")
+                  <q-item-label overline>{{ item.supply.label }}</q-item-label>
+                  <q-item-label>{{
+                    item.supply.fullName.split("-").slice(1, -1).join("-")
                   }}</q-item-label>
-                  <q-item-label>{{ item.supply.label }}</q-item-label>
                   <q-item-label caption
                     >{{
                       `${item.entity}(${item.supply.unitName}) x ${item.supply.unitValue}€`
@@ -79,11 +84,39 @@
                   ><q-icon :name="item.supply.icon" size="lg"
                 /></q-item-section>
                 <q-item-section side>
-                  <q-item-label header
-                    >{{
-                      (item.entity * item.supply.unitValue).toLocaleString()
-                    }}€</q-item-label
+                  <div
+                    class="row items-center justify-center"
+                    style="width: 80px"
                   >
+                    <div class="col text-text-subtitle2">
+                      {{
+                        (item.entity * item.supply.unitValue).toLocaleString()
+                      }}€
+                    </div>
+                    <div
+                      v-if="item.id === selectedId"
+                      class="col row text-grey-8 q-gutter-xs"
+                    >
+                      <q-btn
+                        icon="edit"
+                        class="gt-xs"
+                        size="12px"
+                        flat
+                        dense
+                        round
+                        @click="onEditItem(item)"
+                      />
+                      <q-btn
+                        icon="delete"
+                        class="gt-xs"
+                        size="12px"
+                        flat
+                        dense
+                        round
+                        @click="onDeleteItem"
+                      />
+                    </div>
+                  </div>
                 </q-item-section>
               </q-item>
               <q-separator />
@@ -101,13 +134,15 @@
 
 <script setup>
 import { ref, computed, watch } from "vue";
-import { date, LocalStorage } from "quasar";
+import { date, LocalStorage, useQuasar } from "quasar";
 import Customer from "src/components/Customer.vue";
 import NewInvoiceItem from "src/components/NewInvoiceItem.vue";
 import { useInvoiceStore } from "src/stores/invoice";
+import { useI18n } from "vue-i18n";
 
-const { uuidv4 } = useInvoiceStore();
-
+const { uuidv4, newInvoice } = useInvoiceStore();
+const $q = useQuasar();
+const { t } = useI18n();
 const props = defineProps({ modelValue: Object, isNew: Boolean });
 const emit = defineEmits("update:model-value");
 const newModel = {
@@ -119,8 +154,9 @@ const model = ref({ ...newModel, ...props.modelValue });
 const newItem = ref();
 const isNewItem = ref(true);
 const showNewItem = ref(false);
+const selectedId = ref("");
 
-const onUpdate = (u) => {
+const onUpdateItem = (u) => {
   if (isNewItem.value) model.value.items.push({ ...u });
   else {
     const foundIndex = model.value.items.findIndex((f) => f.id === u.id);
@@ -128,16 +164,11 @@ const onUpdate = (u) => {
       model.value.items[foundIndex] = { ...u };
     }
   }
+  showNewItem.value = false;
 };
 const total = computed(() =>
   model.value.items.reduce((t, c) => (t += c.entity * c.supply.unitValue), 0)
 );
-
-const editIt = (item) => {
-  newItem.value = item;
-  isNewItem.value = false;
-  showNewItem.value = true;
-};
 
 const loadUnSavedForm = () => {
   try {
@@ -156,7 +187,31 @@ const saveUnsavedForm = () => {
 };
 const onSave = () => {
   removeUnsavedForm();
+  if (props.isNew) {
+    newInvoice({ ...model.value, total });
+  }
   emit("update:model-value", model.value);
+};
+const onNewItem = () => {
+  isNewItem.value = true;
+  showNewItem.value = true;
+};
+const onEditItem = (item) => {
+  newItem.value = item;
+  isNewItem.value = false;
+  showNewItem.value = true;
+};
+const onDeleteItem = () => {
+  $q.dialog({
+    title: t("confirm"),
+    message: t("deleteItemAsk"),
+    cancel: true,
+  }).onOk(() => {
+    const foundIndex = model.value.items.findIndex(
+      (f) => f.id === selectedId.value
+    );
+    if (foundIndex !== -1) model.value.items.splice(foundIndex, 1);
+  });
 };
 const removeUnsavedForm = () => LocalStorage.remove("unsavedForm");
 watch(

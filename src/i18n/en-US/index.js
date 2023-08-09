@@ -54,5 +54,9 @@ export default {
   newItem: "New Item",
   select:"Select",
   entity:"Entity",
-  note:"Note"
+  note:"Note",
+  confirm: "Confirm",
+  deleteItemAsk:"Delete Item?",
+  entityRequired: "Entity is required",
+  entityNotValid: "Entity is not valid",
 }
