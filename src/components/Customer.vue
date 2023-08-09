@@ -17,7 +17,7 @@
       v-model="model"
       :options="customers"
       stack-label
-      :label="$t('customer')"
+      :label="$t('customer') + (required ? ' *' : '')"
       :display-value="
         'name' in model
           ? `${model?.name} (${model?.selectedAddress?.name})`
@@ -51,7 +51,7 @@
             <q-item-label caption>{{ opt.email }}</q-item-label>
           </q-item-section>
           <q-item-section side
-            >{{ opt.selectedAddress.address }}
+            >{{ opt.selectedAddress?.address }}
           </q-item-section>
         </q-item>
       </template>
@@ -68,7 +68,7 @@ import NewCustomer from "src/components/NewCustomer.vue";
 
 const showNewCustomer = ref(false);
 const $q = useQuasar();
-const props = defineProps({ modelValue: Object });
+const props = defineProps({ modelValue: Object, required: Boolean });
 const emit = defineEmits(["update:model-value"]);
 const model = ref({ ...props.modelValue });
 const isNew = ref(true);

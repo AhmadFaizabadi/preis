@@ -1,5 +1,5 @@
 <template>
-  <q-card style="width: 100%">
+  <q-card class="q-pa-md" style="width: 100%">
     <q-card-section>
       <div class="text-h6">
         {{ isNew ? $t("newCustomer") : $t("editCustomer") }}
@@ -10,24 +10,32 @@
         <q-input
           name="name"
           v-model="model.name"
-          :label="$t('name')"
+          :label="$t('name') + ' *'"
           stack-label
           autofocus
           @blur="capitalizeName"
+          lazy-rules
+          :rules="[
+            (val) => (val && val.length > 1) || $t('customerNameRequired'),
+          ]"
         />
         <q-input
           name="phone"
           v-model="model.phone"
-          :label="$t('phone')"
+          :label="$t('phone') + ' *'"
           stack-label
           type="tel"
+          lazy-rules
+          :rules="[validatePhoneNumber]"
         />
         <q-input
           name="email"
           v-model="model.email"
-          label="Email"
+          label="Email *"
           stack-label
           type="email"
+          lazy-rules
+          :rules="[validateEmail]"
         />
         <c-address
           v-model:addresses="model.addresses"
@@ -47,6 +55,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { validateEmail, validatePhoneNumber } from "src/api/utils";
 import CAddress from "src/components/Address.vue";
 const props = defineProps({
   modelValue: Object,

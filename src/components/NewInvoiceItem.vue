@@ -16,6 +16,8 @@
                 model.supply?.label
               : ''
           "
+          lazy-rules
+          :rules="[(val) => !!val || $t('supplyRequired')]"
         >
           <template v-slot:after>
             <q-icon
