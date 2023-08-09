@@ -1,6 +1,7 @@
 // This is just an example,
 // so you can safely delete all default props below
 
+
 export default {
   failed: "Action failed",
   date: "Date",
@@ -68,5 +69,17 @@ export default {
   supplyRequired: "Supply is required",
   noItems: "No Items have been entered",
   noCustomer:"Customer is not selected",
-  invoiceRegistered: "Invoice registered"
+  invoiceRegistered: "Invoice registered",
+  settings:"Settings",
+  manageAccounts:"Manage Accounts",
+  manageAccountsCaption:"users management",
+  autoSendEmail:"Auto send email",
+  autoSendEmailCaption:"Sending email automatically after invoice saved",
+  general:"General",
+  senderEmail:"Sender email",
+  senderEmailCaption:"email account used for sending invoice mails",
+  senderEmailPassword:"Password of sender email account",
+  sentInvoiceFormat:"Sent invoice format",
+  sentInvoiceHeader:"Sent invoice header",
+  sentInvoiceFooter:"Sent invoice footer",
 };

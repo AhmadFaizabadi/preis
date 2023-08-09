@@ -41,7 +41,8 @@
           </template>
         </q-select>
         <q-input
-          outlined=""
+          ref="entityRef"
+          outlined
           :label="$t('entity') + ' *'"
           v-model="model.entity"
           type="number"
@@ -66,7 +67,14 @@
     </q-form>
   </q-card>
   <q-dialog position="right" v-model="showSupplyTree">
-    <supplies-tree v-model="model.supply" :editable="false" />
+    <supplies-tree
+      v-model="model.supply"
+      :editable="false"
+      @update:model-value="
+        showSupplyTree = false;
+        entityRef.focus();
+      "
+    />
   </q-dialog>
 </template>
 
@@ -81,6 +89,7 @@ const props = defineProps({ modelValue: Object, isNew: Boolean });
 const emit = defineEmits(["update:model-value"]);
 const model = ref(props.isNew ? {} : { ...props.modelValue });
 const showSupplyTree = ref(false);
+const entityRef = ref(null);
 if (props.isNew) model.value.id = uuidv4().split("-").at(-1);
 
 const onSubmit = () => {

@@ -62,6 +62,12 @@ export default defineComponent({
         link: "/services",
       },
       {
+        title: "manageAccounts",
+        caption: "manageAccountsCaption",
+        icon: "mannage_account",
+        link: "/accounts",
+      },
+      {
         title: "invoiceIssuance",
         caption: "invoiceIssuanceCaption",
         icon: "post_add",
@@ -72,6 +78,12 @@ export default defineComponent({
         caption: "listInvoicesCaption",
         icon: "toc",
         link: "/list-invoices",
+      },
+      {
+        title: "settings",
+        caption: "settings",
+        icon: "settings",
+        link: "/settings",
       },
     ];
 

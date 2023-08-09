@@ -46,6 +46,7 @@
           dens
           v-model="filter"
           style="width: 250px"
+          @keyup.enter="selectBtnRef.click()"
         >
           <template v-slot:append>
             <q-icon
@@ -104,6 +105,7 @@
     <div class="col">
       <q-card-actions v-if="!editable" class="justify-end">
         <q-btn
+          ref="selectBtnRef"
           :disable="!(selected && treeRef?.getNodeByKey(selected)?.unitValue)"
           flat
           v-close-popup
@@ -153,6 +155,7 @@ const isNew = ref(false);
 const theModel = ref();
 const supplyFormVisible = ref(false);
 const priceFormVisible = ref(false);
+const selectBtnRef = ref(null);
 
 const myFilterMethod = (node, filter) => {
   const filt = filter.toLowerCase().split(" ");
