@@ -43,6 +43,7 @@
         <q-input
           ref="entityRef"
           outlined
+          autofocus
           :label="$t('entity') + ' *'"
           v-model="model.entity"
           type="number"
@@ -72,7 +73,7 @@
       :editable="false"
       @update:model-value="
         showSupplyTree = false;
-        entityRef.focus();
+        entityRef.select();
       "
     />
   </q-dialog>
