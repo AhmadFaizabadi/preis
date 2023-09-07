@@ -136,6 +136,13 @@ export const useInvoiceStore = defineStore("invoice", {
     newInvoice(invoice){
       this.invoices.push(invoice);
       this.saveData('invoice')
+    },
+    async newUser(user){
+      try {
+        const response=await api.post('user', user)
+      } catch (error) {
+
+      }
     }
   },
 });

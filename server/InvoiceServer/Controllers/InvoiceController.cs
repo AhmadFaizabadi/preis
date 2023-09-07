@@ -1,5 +1,6 @@
 using InvoiceServer.DTO;
 using InvoiceServer.Services;
+using InvoiceServer.Services.Contracts;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,11 +10,12 @@ namespace InvoiceServer.Controllers
   [Route("api/v1/[controller]")]
   public class InvoiceController : ControllerBase
   {
-    private readonly InvoiceServices _invoiceServices;
+    private readonly IInvoiceServices _invoiceServices;
 
-    public InvoiceController()
+    public InvoiceController(IInvoiceServices invoiceServices)
     {
-        _invoiceServices = new InvoiceServices("Data Source=invoice.db");
+      _invoiceServices = invoiceServices;
+        //_invoiceServices = new InvoiceServices("Data Source=invoice.db");
     }
 
     [HttpGet("base-data/{version}")]

@@ -73,7 +73,7 @@
 </template>
 
 <script setup>
-import { validateEmail } from "src/api/utils";
+import { validateEmail, validateRequired } from "src/api/utils";
 import { ref } from "vue";
 
 const model = ref({});

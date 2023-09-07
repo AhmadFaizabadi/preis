@@ -16,7 +16,7 @@ namespace InvoiceServer.Services.Tests
     public void EnsureTablesExistTest()
     {
       var service = new InvoiceServices("Data Source=d:\\temp\\invoice.db");
-      service.EnsureTablesExist().Wait();
+      service.EnsureTablesExistAsync().Wait();
       Assert.Fail();
     }
 
@@ -24,7 +24,7 @@ namespace InvoiceServer.Services.Tests
     public void GetBaseDataReturnsTuple()
     {
       var service = new InvoiceServices("Data Source=d:\\temp\\invoice.db");
-      service.EnsureTablesExist().Wait();
+      service.EnsureTablesExistAsync().Wait();
       var x = service.GetBaseDataAsync(0).Result;
       Assert.IsNotNull(x);
     }

@@ -82,4 +82,7 @@ export default {
   sentInvoiceFormat:"Sent invoice format",
   sentInvoiceHeader:"Sent invoice header",
   sentInvoiceFooter:"Sent invoice footer",
+  newUser:"New user",
+  invalidUsername: "Username must be atleast 4 chars!",
+  userRole: "Role"
 };

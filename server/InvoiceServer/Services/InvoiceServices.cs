@@ -1,16 +1,19 @@
+using InvoiceServer.Services.Contracts;
+
 using Microsoft.Data.Sqlite;
 
 namespace InvoiceServer.Services
 {
-  public class InvoiceServices
+  
+
+  public class InvoiceServices : IInvoiceServices
   {
     private readonly string _cns;
-
-    public InvoiceServices(string connectionString)
+    public InvoiceServices(IConfiguration configuration)
     {
-      _cns = connectionString;
+      _cns = configuration.GetConnectionString("InvoiceDB") ?? "Data Source=invoice.db";
     }
-    public async Task EnsureTablesExist()
+    public async Task EnsureTablesExistAsync()
     {
       using (var connection = new SqliteConnection(_cns))
       {
@@ -22,10 +25,35 @@ namespace InvoiceServer.Services
           FROM sqlite_schema
           WHERE type='table' AND name='baseData'
           ) as e";
-        var exists = (Int64)await existsCmd.ExecuteScalarAsync();
-        if (exists != 1)
+        var exists = await existsCmd.ExecuteScalarAsync();
+        if ((Int64?)exists != 1)
         {
           existsCmd.CommandText = @"create table baseData(version INTEGER PRIMARY KEY, supplies TEXT, prices TEXT)";
+          await existsCmd.ExecuteNonQueryAsync();
+        }
+
+        existsCmd.CommandText = @"SELECT EXISTS (
+          SELECT name
+          FROM sqlite_schema
+          WHERE type='table' AND name='users'
+          ) as e";
+        exists = await existsCmd.ExecuteScalarAsync();
+        if ((Int64?)exists != 1)
+        {
+          existsCmd.CommandText = @"CREATE TABLE Users (
+                  Id INTEGER PRIMARY KEY,
+                  Name TEXT,
+                  UserName TEXT,
+                  Title TEXT,
+                  Email TEXT,
+                  Phone TEXT,
+                  Role TEXT NOT NULL,
+                  PasswordHash INTEGER NOT NULL,
+                  EmailConfirmed INTEGER NOT NULL,
+                  Enabled INTEGER NOT NULL,
+                  CreatedDateTime TEXT,
+                  ModifiedDateTime TEXT
+              );";
           await existsCmd.ExecuteNonQueryAsync();
         }
       }
@@ -63,3 +91,4 @@ namespace InvoiceServer.Services
     }
   }
 }
+
