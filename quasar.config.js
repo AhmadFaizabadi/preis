@@ -28,7 +28,8 @@ module.exports = configure(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli/boot-files
-    boot: ["i18n", "axios","startup"],
+    // boot: ["i18n", "set-default", "axios", "permission"],
+    boot: ["i18n", "set-default", "axios"],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ["app.scss"],
@@ -36,7 +37,7 @@ module.exports = configure(function (/* ctx */) {
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
       // 'ionicons-v4',
-      // 'mdi-v5',
+      "mdi-v5",
       // 'fontawesome-v6',
       // 'eva-icons',
       // 'themify',
@@ -96,8 +97,8 @@ module.exports = configure(function (/* ctx */) {
       https: false,
       open: true, // opens browser window automatically
       proxy: {
-        "/api/v1": {
-          target: "http://localhost:5082",
+        "/api": {
+          target: "http://192.168.1.5:5082",
           changeOrigin: true,
         },
       },
@@ -118,7 +119,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ["Dialog","Notify", "LocalStorage"],
+      plugins: ["Dialog", "Notify", "LocalStorage"],
     },
 
     // animations: 'all', // --- includes all animations

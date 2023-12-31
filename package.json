@@ -13,13 +13,13 @@
     "build": "quasar build"
   },
   "dependencies": {
-    "@quasar/extras": "^1.16.4",
+    "@quasar/extras": "^1.16.9",
     "@quasar/quasar-ui-qiconpicker": "^2.0.7",
     "axios": "^1.4.0",
     "dropbox": "^10.34.0",
     "fastify": "^4.21.0",
     "pinia": "^2.1.6",
-    "quasar": "^2.6.0",
+    "quasar": "^2.14.2",
     "vue": "^3.0.0",
     "vue-i18n": "^9.0.0",
     "vue-router": "^4.0.0"
@@ -36,7 +36,7 @@
     "prettier": "^2.5.1"
   },
   "engines": {
-    "node": "^18 || ^16 || ^14.19",
+    "node": "^20 || ^18 || ^16",
     "npm": ">= 6.13.4",
     "yarn": ">= 1.21.1"
   }

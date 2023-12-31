@@ -71,7 +71,7 @@ export default {
   noCustomer:"Customer is not selected",
   invoiceRegistered: "Invoice registered",
   settings:"Settings",
-  manageAccounts:"Manage Accounts",
+  manageAccounts:"Users Management",
   manageAccountsCaption:"users management",
   autoSendEmail:"Auto send email",
   autoSendEmailCaption:"Sending email automatically after invoice saved",

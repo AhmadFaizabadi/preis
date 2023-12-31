@@ -1,15 +1,8 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header elevated class="print-hide">
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title> Unitec </q-toolbar-title>
 
@@ -17,15 +10,11 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
+    <q-drawer class="print-hide" v-model="leftDrawerOpen" show-if-above bordered :breakpoint="2000">
       <q-list>
         <q-item-label header> UserName </q-item-label>
 
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
+        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>
     </q-drawer>
 
@@ -35,65 +24,62 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent, ref } from "vue";
+<script setup>
+import { ref } from "vue";
 import EssentialLink from "components/EssentialLink.vue";
 
-export default defineComponent({
-  name: "MainLayout",
-
-  components: {
-    EssentialLink,
+const leftDrawerOpen = ref(false);
+const linksList = [
+  {
+    title: "signup",
+    caption: "signup",
+    icon: "las la-user-plus",
+    link: "/register",
   },
-
-  setup() {
-    const leftDrawerOpen = ref(false);
-    const linksList = [
-      {
-        title: "signup",
-        caption: "signup",
-        icon: "las la-user-plus",
-        link: "/register",
-      },
-      {
-        title: "serviceManagement",
-        caption: "serviceManagementCaption",
-        icon: "account_tree",
-        link: "/services",
-      },
-      {
-        title: "manageAccounts",
-        caption: "manageAccountsCaption",
-        icon: "mannage_account",
-        link: "/accounts",
-      },
-      {
-        title: "invoiceIssuance",
-        caption: "invoiceIssuanceCaption",
-        icon: "post_add",
-        link: "/invoice",
-      },
-      {
-        title: "listInvoices",
-        caption: "listInvoicesCaption",
-        icon: "toc",
-        link: "/list-invoices",
-      },
-      {
-        title: "settings",
-        caption: "settings",
-        icon: "settings",
-        link: "/settings",
-      },
-    ];
-
-    return {
-      essentialLinks: linksList,
-      leftDrawerOpen,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value;
-      },
-    };
+  {
+    title: "productManagement",
+    caption: "productManagementCaption",
+    icon: "mdi-package-variant",
+    link: "/products",
   },
-});
+  {
+    title: "customers management",
+    caption: "customerManagementCaption",
+    icon: "mdi-card-account-details-outline",
+    link: "/customers",
+  },
+  {
+    title: "serviceManagement",
+    caption: "serviceManagementCaption",
+    icon: "account_tree",
+    link: "/services",
+  },
+  {
+    title: "invoiceManagement",
+    caption: "invoiceManagementCaption",
+    icon: "account_tree",
+    link: "/invoices",
+  },
+  {
+    title: "manageAccounts",
+    caption: "manageAccountsCaption",
+    icon: "mannage_account",
+    link: "/users",
+  },
+  {
+    title: "invoiceIssuance",
+    caption: "invoiceIssuanceCaption",
+    icon: "post_add",
+    link: "/invoices/new",
+  },
+  {
+    title: "settings",
+    caption: "settings",
+    icon: "settings",
+    link: "/settings",
+  },
+];
+
+const toggleLeftDrawer = () =>
+  leftDrawerOpen.value = !leftDrawerOpen.value;
 </script>
