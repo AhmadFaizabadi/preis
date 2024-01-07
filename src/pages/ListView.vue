@@ -3,7 +3,7 @@
     :loading="loading" :filter="filter" binary-state-sort separator="cell" wrap-cells selection="single"
     @selection="onSelect" v-model:selected="selected" @request="onRequest">
     <template v-slot:top-right>
-      <q-input borderless dense debounce=" 300" v-model="filter" :placeholder="$t('search')">
+      <q-input borderless dense debounce="300" v-model="filter" :placeholder="$t('search')">
         <template v-slot:append>
           <q-icon name="search" />
         </template>

@@ -37,22 +37,28 @@ const linksList = [
     link: "/register",
   },
   {
-    title: "productManagement",
-    caption: "productManagementCaption",
-    icon: "mdi-package-variant",
-    link: "/products",
-  },
-  {
     title: "customers management",
     caption: "customerManagementCaption",
     icon: "mdi-card-account-details-outline",
     link: "/customers",
   },
   {
+    title: "productManagement",
+    caption: "productManagementCaption",
+    icon: "mdi-package-variant",
+    link: "/products",
+  },
+  {
     title: "serviceManagement",
     caption: "serviceManagementCaption",
     icon: "account_tree",
     link: "/services",
+  },
+  {
+    title: "packageManagement",
+    caption: "packageManagementCaption",
+    icon: "mdi-generator-portable",
+    link: "/packages",
   },
   {
     title: "invoiceManagement",

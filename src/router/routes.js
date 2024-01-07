@@ -100,6 +100,26 @@ const routes = [
           },
         ],
       },
+      {
+        path: "/packages",
+        component: () => import("src/pages/Package/PackagesManagement.vue"),
+        children: [
+          {
+            path: "new",
+            component: () => import("pages/Package/PackageNew.vue"),
+            props: { isNew: true },
+          },
+          {
+            path: "view/:id",
+            component: () => import("pages/Package/PackageView.vue"),
+          },
+          {
+            path: "edit/:id",
+            component: () => import("pages/Package/PackageNew.vue"),
+            props: { isNew: false },
+          },
+        ],
+      },
       { path: "/users", component: () => import("pages/UsersManagement.vue") },
       { path: "/settings", component: () => import("pages/Settings.vue") },
       {
