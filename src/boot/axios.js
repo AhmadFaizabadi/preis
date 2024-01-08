@@ -137,10 +137,13 @@ export default boot(({ app, router }) => {
             "Request Address NotFound " + error.response.request.responseURL,
         });
       } else if (error.response && error.response.status === 400) {
-        Notify.create({
-          type: "negative",
-          message: error.response.data.ErrorReason,
-        });
+        let msg = error.response.data.ErrorReason;
+        if (msg && msg.includes("unique")) msg = "duplicate error!";
+        if (msg)
+          Notify.create({
+            type: "negative",
+            message: msg,
+          });
       } else if (error.response && [401, 403].includes(error.response.status)) {
         Notify.create({
           type: "negative",

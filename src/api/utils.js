@@ -1,4 +1,5 @@
 import { Notify } from "quasar";
+import { getAction } from "./manage";
 /**
  * Validate required field
  * @param  {String} value Inputed value
@@ -64,7 +65,10 @@ const capitalize = (name) =>
     ?.split(" ")
     .reduce((t, c) => (t += c.charAt(0).toUpperCase() + c.slice(1) + " "), "")
     .trim();
+
 const germanDate = (d) => d?.substring(0, 10).split("-").reverse().join(".");
+const cityByPostalCode = async (code) =>
+  await getAction(`api/v1/common/postalcode/${code}`);
 export {
   validateRequired,
   validateEmail,
@@ -75,4 +79,5 @@ export {
   uuidv4,
   capitalize,
   germanDate,
+  cityByPostalCode,
 };

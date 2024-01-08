@@ -309,7 +309,7 @@ function onSubmit() {
           ? await patchAction("api/v1/invoices/update", data)
           : await postAction("api/v1/invoices", data);
         postedSuccessfully();
-        $router.back();
+        $router.push("/invoices");
       } finally {
         loading.value = false;
       }

@@ -2,7 +2,14 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated class="print-hide">
       <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+        <q-btn
+          flat
+          dense
+          round
+          icon="menu"
+          aria-label="Menu"
+          @click="toggleLeftDrawer"
+        />
 
         <q-toolbar-title> Unitec </q-toolbar-title>
 
@@ -10,11 +17,21 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer class="print-hide" v-model="leftDrawerOpen" show-if-above bordered :breakpoint="2000">
+    <q-drawer
+      class="print-hide"
+      v-model="leftDrawerOpen"
+      show-if-above
+      bordered
+      :breakpoint="2000"
+    >
       <q-list>
         <q-item-label header> UserName </q-item-label>
 
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
+        <EssentialLink
+          v-for="link in linksList"
+          :key="link.title"
+          v-bind="link"
+        />
       </q-list>
     </q-drawer>
 
@@ -63,7 +80,7 @@ const linksList = [
   {
     title: "invoiceManagement",
     caption: "invoiceManagementCaption",
-    icon: "account_tree",
+    icon: "mdi-tag",
     link: "/invoices",
   },
   {
@@ -75,7 +92,7 @@ const linksList = [
   {
     title: "invoiceIssuance",
     caption: "invoiceIssuanceCaption",
-    icon: "post_add",
+    icon: "mdi-offer",
     link: "/invoices/new",
   },
   {
@@ -86,6 +103,5 @@ const linksList = [
   },
 ];
 
-const toggleLeftDrawer = () =>
-  leftDrawerOpen.value = !leftDrawerOpen.value;
+const toggleLeftDrawer = () => (leftDrawerOpen.value = !leftDrawerOpen.value);
 </script>

@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <q-inner-loading v-model="loading" />
-    <div id="printme" class="printme overflow-hidden">
+    <div class="printme overflow-hidden">
       <table>
         <thead>
           <tr>
@@ -9,21 +9,22 @@
               <div class="header">
                 <div class="row justify-between">
                   <div>
-                    <span class="text-light-green-6"
+                    <span class="text-light-green-14 text-small"
                       >UNITEC Energieservice GmbH</span
                     >
-                    · Innungstraße 22, 50354 Hürth
+                    ·
+                    <span class="text-small">
+                      Innungstraße 22, 50354 Hürth
+                    </span>
                   </div>
                   <div class="q-mt-lg">
-                    <q-img src="images/logo.jpg" width="100px" />
+                    <q-img src="images/logo.jpg" width="120px" />
                   </div>
                 </div>
-                <p>{{ model.Customer?.Title }} {{ model.Customer?.Name }}</p>
-                <p>{{ model.Customer?.StreetAndNumber }}</p>
-                <p>
-                  {{ model.Customer?.PostalCode }}
-                  {{ model.Customer?.City }}
-                </p>
+                <div class="simple-text">
+                  <p>Herr/Frau {{ model.Customer?.Name }}</p>
+                  <p>{{ model.Customer?.SelectedAddress?.AddressText }}</p>
+                </div>
               </div>
             </td>
           </tr>
@@ -33,69 +34,65 @@
             <td>
               <div class="column">
                 <div>
-                  <div class="empty-space"></div>
-                  <div class="empty-space"></div>
-                  <div class="empty-space"></div>
                   <p class="text-right">Hürth, {{ germanDate(model.Date) }}</p>
                   <p class="text-h6 text-bold q-mb-xs">ANGEBOT</p>
                   <p class="text-subtitle-2 q-mt-xs">
-                    <strong> Angebotnummer: {{ model.ProjectNumber }}</strong> ·
+                    <strong> Projekt: {{ model.ProjectNumber }}</strong> ·
                     {{ model.ProjectName }}
                   </p>
 
-                  <p>
-                    Sehr geehrter {{ model.Customer?.Title }}
-                    {{ model.Customer?.Name }},<br />vielen Dank für Ihre
-                    Anfrage. Gerne unterbreiten wir Ihnen das gewünschte
-                    freibleibende Angebot:
+                  <p class="simple-text">
+                    Sehr geehrter {{ model.Customer?.Title }},<br />vielen Dank
+                    für Ihre Anfrage. Gerne unterbreiten wir Ihnen das
+                    gewünschte freibleibende Angebot:
                   </p>
                   <p><strong>Produkte Tabelle</strong></p>
                   <q-markup-table
-                    separator="cell"
                     flat
                     bordered
                     class="products-table overflow-hidden"
                   >
                     <thead>
-                      <tr class="bg-black text-white">
-                        <th class="text-left">No</th>
-                        <th class="text-center">Bild der Produkte</th>
-                        <th class="text-center">Beschreibung</th>
-                        <th class="text-center">Menge</th>
+                      <tr
+                        class="bg-grey-5 text-white text-uppercase table-header"
+                      >
+                        <th class="text-left" style="width: 100px">POS.</th>
+                        <th class="text-left" style="width: 700px">
+                          BESCHREIBUNG
+                        </th>
+                        <th class="text-left">Menge</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr
                         v-for="(item, index) in productItems"
                         :key="'prd' + index"
+                        class="table-row"
                       >
-                        <td>{{ index + 1 }}</td>
+                        <td>{{ index + 1 }}.</td>
                         <td
                           style="
-                            max-width: 100px;
-                            max-width: 75px;
-                            text-align: center;
+                            text-wrap: wrap;
+                            overflow: hidden;
+                            width: 300px;
                           "
                         >
-                          <product-image :id="item.Product?.Id" :width="100" />
-                        </td>
-
-                        <td>
-                          <div
-                            class="text-left text-smaller"
-                            style="
-                              max-width: 50rem;
-                              text-wrap: wrap;
-                              max-height: 10rem;
-                              overflow: hidden;
-                            "
-                          >
-                            <strong
-                              >{{ item.Product?.Name }} -
-                              {{ item.Product?.Category }}</strong
-                            >
-                            <br />
-                            <div v-html="item.Product?.Description"></div>
+                          <div class="row q-gutter-md no-wrap">
+                            <product-image
+                              class="col-2"
+                              :id="item.Product?.Id"
+                              full-size
+                              :width="150"
+                            />
+                            <div class="col-8 column">
+                              <div class="col-1">
+                                {{ item.Product?.Name }}
+                              </div>
+                              <div
+                                class="col text-description"
+                                v-html="item.Product?.Description"
+                              />
+                            </div>
                           </div>
                         </td>
                         <td class="text-center">{{ item.Entity }}</td>
@@ -115,7 +112,7 @@
                       <thead>
                         <tr>
                           <th>No</th>
-                          <th>Bild der Dienste</th>
+                          <th>Name der Dienste</th>
                           <th>Beschreibung</th>
                           <th>Menge</th>
                         </tr>
@@ -126,42 +123,25 @@
                           :key="'srv' + index"
                         >
                           <td>{{ index + 1 }}</td>
-                          <td
-                            style="
-                              max-width: 125px;
-                              max-width: 100px;
-                              text-align: center;
-                            "
-                          >
-                            <product-image
-                              :id="item.Product?.Id"
-                              :width="100"
-                            />
-                          </td>
+                          <td>{{ item.Product?.Name }}</td>
                           <td>
                             <div
                               class="text-left text-smaller"
                               style="
                                 max-width: 50rem;
                                 text-wrap: wrap;
-                                max-height: 15rem;
+                                max-height: 10rem;
                                 overflow: hidden;
                               "
-                            >
-                              <strong
-                                >{{ item.Product?.Name }} -
-                                {{ item.Product?.Category }}</strong
-                              >
-                              <br />
-                              <div v-html="item.Product?.Description"></div>
-                            </div>
+                              v-html="item.Product?.Description"
+                            />
                           </td>
                           <td class="text-center">{{ item.Entity }}</td>
                         </tr>
                       </tbody>
                     </q-markup-table>
                   </div>
-                  <div class="empty-space"></div>
+
                   <div class="row justify-end">
                     <table class="col-4">
                       <tbody>
@@ -173,8 +153,7 @@
                                 ",",
                                 "."
                               )
-                            }}
-                            €
+                            }}, -€
                           </td>
                         </tr>
                         <tr>
@@ -185,16 +164,16 @@
                           <td>Ihr Preis</td>
                           <td>
                             {{
-                              model.NetPrice?.toLocaleString().replace(",", ".")
-                            }}
-                            €
+                              model.NetPrice?.toLocaleString().replace(
+                                ",",
+                                "."
+                              )
+                            }}, -€
                           </td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
-                  <div class="empty-space"></div>
-                  <hr class="thick-divider" />
                   <div class="column" style="max-width: 100%">
                     <div>
                       Wir hoffen, Ihren Vorstellungen mit diesem Angebot zu
@@ -203,9 +182,8 @@
                     </div>
                     <div>
                       Für Rückfragen erreichen Sie mich unter folgender Nummer:
-                      {{ model.AgentPhone }}
+                      {{ model.AgentPhone }}.
                     </div>
-                    <div class="empty-space"></div>
                     <div>Mit freundlichen Grüßen,</div>
                     <div>
                       {{ model.AgentName }}
@@ -240,14 +218,10 @@ const $router = useRouter();
 const model = ref({});
 const loading = ref(false);
 const productItems = computed(() =>
-  model.value.Items?.filter((f) => f.Product.Category !== "Service").sort(
-    (a, b) => b.Entity - a.Entity
-  )
+  model.value.Items?.filter((f) => f.Product.Category !== "Service")
 );
 const serviceItems = computed(() =>
-  model.value.Items?.filter((f) => f.Product.Category === "Service").sort(
-    (a, b) => b.Entity - a.Entity
-  )
+  model.value.Items?.filter((f) => f.Product.Category === "Service")
 );
 const loadInvoice = async (id) => {
   loading.value = false;
@@ -259,7 +233,6 @@ const loadInvoice = async (id) => {
 };
 const doExport = () => {
   // HtmlToPaper('printMe', options)
-  //html2pdf(document.getElementById('printme'););
   window.focus();
   window.print();
 };
@@ -271,6 +244,8 @@ watch(
 </script>
 
 <style scoped>
+@import url("https://fonts.cdnfonts.com/css/noto-serif-bengali");
+
 @page {
   size: A4;
 }
@@ -285,29 +260,25 @@ watch(
     left: 0;
     right: 0;
   }
+}
+.simple-text {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 11;
+}
 
-  .empty-space {
-    height: 1.5cm;
-  }
-  .thick-divider {
-    border: 2px solid #000; /* Adjust the thickness and color as needed */
-    margin: 1rem 0; /* Adjust the margin to control the spacing around the divider */
-  }
-  .products-table th,
-  .services-table th {
-    border-left: none; /* Remove left border */
-    border-right: none; /* Remove right border */
-    background-color: #333 !important;
-    color: white !important;
-    border-top: none !important;
-    border-bottom: 2px solid #000 !important;
-  }
+.table-header {
+  font-family: Calibri;
+  font-weight: bold;
+  font-size: 10;
+}
+.table-row {
+  font-family: "Noto Serif Bengali", sans-serif !important;
+  max-height: 100px;
+}
 
-  .products-table td,
-  .services-table td {
-    border-left: none; /* Remove left border */
-    border-right: none; /* Remove right border */
-    border-bottom: 1px solid #000 !important;
-  }
+.text-description {
+  max-height: 200px;
+  font-weight: bold;
+  overflow: hidden;
 }
 </style>

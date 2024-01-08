@@ -8,26 +8,64 @@
       </q-card-section>
       <q-card-section>
         <div class="q-pa-md">
-          <q-input v-model="model.Name" :label="$t('name')" stack-label autofocus="" hint="Example: home" lazy-rules
+          <q-input
+            v-model="model.Name"
+            :label="$t('name')"
+            stack-label
+            autofocus=""
+            hint="Example: home"
+            lazy-rules
             :rules="[
-              (val) => (val && val.length > 1) || $t('address name is required!'),
-            ]" />
-          <q-input v-model="model.City" :label="$t('city')" stack-label hint="Example: Berlin"
-            @blur="model.City = capitalize(model.City)" lazy-rules :rules="[
-              (val) => (val && val.length > 1) || $t('city name is required'),
-            ]" />
-          <q-input color="purple-12" v-model="model.AddressText" :label="$t('address')" type="textarea" lazy-rules :rules="[
-            (val) => (val && val.length > 1) || $t('address text is required!'),
-          ]">
-            <template v-slot:prepend>
-              <q-icon name="las la-address-card" />
-            </template>
-          </q-input>
-          <q-input color="purple-12" v-model="model.PostalCode" :label="$t('postal code')" type="tel">
+              (val) =>
+                (val && val.length > 1) || $t('address name is required!'),
+            ]"
+          />
+          <q-input
+            v-model="model.Street"
+            :label="$t('street')"
+            stack-label
+            hint="Example: Aachener"
+            @blur="model.Street = capitalize(model.Street)"
+            lazy-rules
+            :rules="[
+              (val) => (val && val.length > 1) || $t('street name is required'),
+            ]"
+          />
+          <q-input
+            v-model="model.HouseNumber"
+            :label="$t('house number')"
+            stack-label
+            lazy-rules
+            :rules="[
+              (val) =>
+                (val && val.length > 1) || $t('house number is required'),
+            ]"
+          />
+          <q-input
+            color="purple-12"
+            v-model="model.PostalCode"
+            :label="$t('postal code')"
+            type="tel"
+            lazy-rules
+            :rules="[
+              (val) => (val && val.length > 1) || $t('postal code is required'),
+            ]"
+          >
             <template v-slot:prepend>
               <q-icon name="las la-map-marked" />
             </template>
           </q-input>
+          <q-input
+            v-model="model.City"
+            :label="$t('city')"
+            stack-label
+            hint="Example: Berlin"
+            @blur="model.City = capitalize(model.City)"
+            lazy-rules
+            :rules="[
+              (val) => (val && val.length > 1) || $t('city name is required'),
+            ]"
+          />
         </div>
       </q-card-section>
       <q-card-actions class="justify-end">
@@ -48,11 +86,14 @@ const props = defineProps({
 });
 const emit = defineEmits(["update:model-value"]);
 const formRef = ref(null);
-const model = ref(props.isNew ? { Id: uuidv4(), Name: "home" } : { ...props.modelValue });
+const model = ref(
+  props.isNew ? { Id: uuidv4(), Name: "home" } : { ...props.modelValue }
+);
 
-const onSubmit = () => formRef.value.validate().then(success => {
-  if (success) emit("update:model-value", model.value);
-})
+const onSubmit = () =>
+  formRef.value.validate().then((success) => {
+    if (success) emit("update:model-value", model.value);
+  });
 </script>
 
 <style lang="sass" scoped>

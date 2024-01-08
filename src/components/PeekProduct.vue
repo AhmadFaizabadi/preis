@@ -1,21 +1,21 @@
 <!-- eslint-disable vue/valid-v-model -->
 <template>
   <div class="row no-wrap bg-grey-1" style="height: 100%">
-    <div class="col-3">
+    <div class="col-2">
       <div class="column" style="height: 100%">
-        <div class="col-1">
+        <div class="col-2 column">
           <div
-            class="text-center q-pa-md rounded-borders bg-blue text-white text-h6"
+            class="col text-center q-pb-lg bg-blue text-white text-subtitle1 text-overline"
           >
             {{ $t("select products and services") }}
           </div>
-          <div>
+          <div class="col">
             <q-btn icon="delete" size="sm" round flat @click="deselectAll()" />
           </div>
         </div>
         <q-list
           v-if="peeked?.length > 0"
-          class="col-10 rounded-borders bg-lime-12 text-grey-10 scroll q-pa-lg"
+          class="col-8 bg-grey-2 text-grey-10 scroll q-pa-lg"
           style="width: 100%"
         >
           <ol>
@@ -51,9 +51,21 @@
         </div>
       </div>
     </div>
-    <div class="col-9">
+    <div class="col-10">
       <div class="column" style="height: 100%">
-        <div class="col-11 row q-gutter-sm scroll">
+        <div class="col-1 row q-gutter-md items-center justify-center">
+          <div class="justify-center">{{ $t("sorted by") }}</div>
+          <q-btn-toggle
+            v-model="sortedOn"
+            toggle-color="primary"
+            :options="[
+              { label: 'Category', value: 'Category' },
+              { label: 'Power', value: 'Power' },
+              { label: 'Name', value: 'Name' },
+            ]"
+          />
+        </div>
+        <div class="col-10 row q-gutter-md scroll q-pa-md justify-center">
           <peek-product-item
             v-for="p in products"
             :key="p.Id"
@@ -68,7 +80,8 @@
             v-model="search"
             :placeholder="$t('search')"
             input-class="text-h6"
-          />
+            ><template #prepend><q-icon name="search" /></template>
+          </q-input>
         </div>
       </div>
     </div>
@@ -83,17 +96,24 @@ import PeekProductItem from "./PeekProductItem.vue";
 const emit = defineEmits(["onSelect"]);
 const productStore = useProductStore();
 const seeds = ref(null);
+const sortedOn = ref("Category");
 const products = computed(() =>
-  seeds.value?.filter((f) => {
-    if (search.value) {
-      const parts = search.value.toLowerCase().split(" ");
-      return (
-        !f.Selected && parts.every((e) => f.Name.toLowerCase().includes(e))
-      );
-    } else return !f.Selected;
-  })
+  seeds.value
+    ?.filter((f) => {
+      if (search.value) {
+        const parts = search.value.toLowerCase().replace("-", " ").split(" ");
+        return (
+          !f.Selected && parts.every((e) => f.Name.toLowerCase().includes(e))
+        );
+      } else return !f.Selected;
+    })
+    ?.sort((a, b) =>
+      String(a[sortedOn.value]).localeCompare(String(b[sortedOn.value]))
+    )
 );
-const peeked = computed(() => seeds.value?.filter((f) => f.Selected));
+const peeked = computed(() =>
+  seeds.value?.filter((f) => f.Selected).sort((a, b) => b.Entity - a.Entity)
+);
 const search = ref(null);
 const onDropped = (d) => {
   const found = seeds.value?.find((f) => f.Id === d.Id);

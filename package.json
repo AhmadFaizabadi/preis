@@ -1,8 +1,8 @@
 {
   "name": "preis",
   "version": "0.0.1",
-  "description": "A Unitek Toolbox",
-  "productName": "Vorabrechnung",
+  "description": "A Unitec Toolbox",
+  "productName": "Angebot",
   "author": "Ahmad Faizabadi <ahmad.faizabadi@hotmail.com>",
   "private": true,
   "scripts": {
