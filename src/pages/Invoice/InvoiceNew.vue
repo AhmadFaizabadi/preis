@@ -53,7 +53,7 @@
               required
               style="max-width: 350px"
               @update:model-value="
-                model.ProjectName = $event.SelectedAddress?.AddressText
+                model.ProjectName = `${$event.StreetAndNumber} ${$event.PostalCode}, ${$event.City}`
               "
             />
           </div>
@@ -73,8 +73,8 @@
               {{ $t("invoiceItems") }}: {{ model.Items.length }}
             </div>
           </div>
-          <div class="row q-gutter-md justify-around">
-            <q-list style="height: 100%" class="col-8 q-mt-xl scroll">
+          <div class="row q-gutter-md justify-around no-wrap">
+            <q-list style="height: 100%" class="col-6 q-mt-xl scroll">
               <template v-for="item in model.Items" :key="item.Id">
                 <q-item
                   clickable
@@ -100,7 +100,7 @@
                     }}</q-item-label>
                   </q-item-section>
                   <q-item-section avatar
-                    ><product-image :id="item.Product.Id" :width="100"
+                    ><product-image :id="item.Product.Id" :width="50"
                   /></q-item-section>
                   <q-item-section side>
                     <div
@@ -144,18 +144,7 @@
                 </q-item>
               </template>
             </q-list>
-            <div class="col-2 column q-gutter-lg">
-              <q-input
-                v-model="model.ProjectNumber"
-                :label="$t('projectNumber')"
-                class="req-field"
-                lazy-rules
-                :rules="[
-                  (v) =>
-                    (v && v?.length > 0) ||
-                    $t('projectNumber') + ' is required',
-                ]"
-              />
+            <div class="col-4 column q-gutter-lg">
               <q-input
                 v-model="model.ProjectName"
                 :label="$t('projectName')"
@@ -286,7 +275,7 @@ function onSubmit() {
     $q.notify({ type: "negative", message: t("noItems") });
     return;
   }
-  if (!model.value.Customer?.Name) {
+  if (!model.value.Customer?.Id) {
     $q.notify({ type: "negative", message: t("noCustomer") });
     return;
   }

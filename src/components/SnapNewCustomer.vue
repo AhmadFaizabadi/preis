@@ -51,38 +51,37 @@
               </template>
             </q-field>
             <q-input
-              v-if="model.Property === 'Privat'"
-              v-model.trim="model.Name"
-              :label="$t('name') + ' *'"
+              v-model.trim="model.FirstName"
+              :label="$t('firstname') + ' *'"
               stack-label
-              @blur="model.Name = capitalize(model.Name)"
+              @blur="model.FirstName = capitalize(model.FirstName)"
               lazy-rules
               :rules="[
-                (val) => (val && val.length > 1) || $t('customerNameRequired'),
+                (val) =>
+                  (val && val.length > 1) || $t('first name is required'),
               ]"
             />
-            <div v-else class="col">
-              <q-input
-                v-model="model.AgentName"
-                :label="$t('agent name') + ' *'"
-                stack-label
-                @blur="model.Name = capitalize(model.AgentName)"
-                lazy-rules
-                :rules="[
-                  (val) => (val && val.length > 1) || $t('agentNameRequired'),
-                ]"
-              />
-              <q-input
-                v-model="model.CompanyName"
-                :label="$t('company name') + ' *'"
-                stack-label
-                @blur="model.Name = capitalize(model.CompanyName)"
-                lazy-rules
-                :rules="[
-                  (val) => (val && val.length > 1) || $t('companyNameRequired'),
-                ]"
-              />
-            </div>
+            <q-input
+              v-model.trim="model.LastName"
+              :label="$t('lastname') + ' *'"
+              stack-label
+              @blur="model.LastName = capitalize(model.LastName)"
+              lazy-rules
+              :rules="[
+                (val) => (val && val.length > 1) || $t('last name is required'),
+              ]"
+            />
+            <q-input
+              v-if="model.Property !== 'Privat'"
+              v-model="model.CompanyName"
+              :label="$t('company name') + ' *'"
+              stack-label
+              @blur="model.Name = capitalize(model.CompanyName)"
+              lazy-rules
+              :rules="[
+                (val) => (val && val.length > 1) || $t('companyNameRequired'),
+              ]"
+            />
           </div>
           <div class="col">
             <q-input

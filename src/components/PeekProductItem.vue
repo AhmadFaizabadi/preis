@@ -78,7 +78,7 @@ import ProductImage from "./ProductImage.vue";
 const props = defineProps({
   product: Object,
 });
-const model = ref({ ...props.product, Entity: props.product?.Entity || "1" });
+const model = ref(props.product);
 const emit = defineEmits(["peeked", "dropped", "entity-updated"]);
 const onSelect = () => {
   model.value.Selected = true;

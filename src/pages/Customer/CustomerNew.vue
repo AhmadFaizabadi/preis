@@ -8,14 +8,23 @@
     <q-form ref="formRef" @submit="onSubmit" class="q-gutter-md">
       <q-card-section>
         <q-input
-          name="Name"
-          v-model="model.Name"
-          :label="$t('name') + ' *'"
+          v-model="model.FirstName"
+          :label="$t('firstname') + ' *'"
           stack-label
-          @blur="model.Name = capitalize(model.Name)"
+          @blur="model.FirstName = capitalize(model.FirstName)"
           lazy-rules
           :rules="[
-            (val) => (val && val.length > 1) || $t('customerNameRequired'),
+            (val) => (val && val.length > 1) || $t('first name is required'),
+          ]"
+        />
+        <q-input
+          v-model="model.LastName"
+          :label="$t('lastname') + ' *'"
+          stack-label
+          @blur="model.LastName = capitalize(model.LastName)"
+          lazy-rules
+          :rules="[
+            (val) => (val && val.length > 1) || $t('last name is required'),
           ]"
         />
         <q-select
@@ -43,10 +52,7 @@
           stack-label
           type="email"
         />
-        <customer-address
-          v-model:addresses="model.Addresses"
-          v-model="model.SelectedAddress"
-        />
+        <customer-address v-model="model" />
         <q-input
           name="Note"
           v-model="model.Note"

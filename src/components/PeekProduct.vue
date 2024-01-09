@@ -1,13 +1,15 @@
 <!-- eslint-disable vue/valid-v-model -->
 <template>
   <div class="row no-wrap bg-grey-1" style="height: 100%">
-    <div class="col-2">
+    <div class="col-3">
       <div class="column" style="height: 100%">
         <div class="col-2 column">
           <div
             class="col text-center q-pb-lg bg-blue text-white text-subtitle1 text-overline"
           >
-            {{ $t("select products and services") }}
+            <div class="q-pa-md">
+              {{ $t("select products and services") }}
+            </div>
           </div>
           <div class="col">
             <q-btn icon="delete" size="sm" round flat @click="deselectAll()" />
@@ -30,7 +32,7 @@
         </q-list>
         <div
           v-else
-          class="col-10 row justify-center vertical-middle text-h6 text-blue-grey-10"
+          class="col-9 row justify-center vertical-middle text-h6 text-blue-grey-10 q-pa-md"
         >
           {{ $t("please select something ➡️") }}
         </div>
@@ -51,7 +53,7 @@
         </div>
       </div>
     </div>
-    <div class="col-10">
+    <div class="col-8">
       <div class="column" style="height: 100%">
         <div class="col-1 row q-gutter-md items-center justify-center">
           <div class="justify-center">{{ $t("sorted by") }}</div>
@@ -103,7 +105,8 @@ const products = computed(() =>
       if (search.value) {
         const parts = search.value.toLowerCase().replace("-", " ").split(" ");
         return (
-          !f.Selected && parts.every((e) => f.Name.toLowerCase().includes(e))
+          !f.Selected &&
+          parts.every((e) => (f.Name + f.Category).toLowerCase().includes(e))
         );
       } else return !f.Selected;
     })

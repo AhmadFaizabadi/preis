@@ -12,13 +12,15 @@
       transition-hide="flip-down"
       filled
       use-input
-      option-value="Name"
+      :option-value="(c) => `${c.FirstName} ${c.LastName}`"
       v-model="model"
       :options="options"
       stack-label
       :label="$t('customer') + (required ? ' *' : '')"
       :display-value="
-        'Name' in model ? `${model?.Name} (${model?.StreetAndNumber})` : ''
+        'FirstName' in model
+          ? `${model?.FirstName} ${model?.LastName} (${model?.StreetAndNumber})`
+          : ''
       "
       @new-value="newCustomer($event)"
       @filter="filterFn"
@@ -27,14 +29,14 @@
           ><q-tooltip>{{ $t("newCustomer") }}</q-tooltip></q-icon
         >
         <q-icon
-          v-if="model?.Name"
+          v-if="model?.Id"
           name="edit"
           class="cursor-pointer"
           @click="editCustomer"
           ><q-tooltip>{{ $t("editCustomer") }}</q-tooltip></q-icon
         >
         <q-icon
-          v-if="model?.Name"
+          v-if="model?.FirstName"
           name="delete"
           class="cursor-pointer"
           @click="onDeleteCustomer"
@@ -44,11 +46,13 @@
       <template v-slot:option="{ itemProps, opt }">
         <q-item v-bind="itemProps">
           <q-item-section>
-            <q-item-label>{{ opt.Name }}</q-item-label>
-            <q-item-label caption>{{ opt.Email }}</q-item-label>
+            <q-item-label>{{ opt.FirstName }} {{ opt.LastName }}</q-item-label>
+            <q-item-label caption>{{
+              opt.Property === "Privat" ? opt.Email : opt.CompanyName
+            }}</q-item-label>
           </q-item-section>
           <q-item-section side
-            >{{ opt.SelectedAddress?.Address }}
+            >{{ `${opt.StreetAndNumber} ${opt.PostalCode}, ${opt.City}` }}
           </q-item-section>
         </q-item>
       </template>
@@ -86,14 +90,16 @@ const editCustomer = () => {
   showNewCustomer.value = true;
 };
 const onDeleteCustomer = () => {
-  const msg = t("sureToDelete") + " " + model.value.Name;
+  const msg = `${t("sureToDelete")} ${model.value.FirstName} ${
+    model.value.LastName
+  }`;
   $q.dialog({
     title: t("deleteConfirm"),
     message: msg,
     cancel: true,
     persistent: true,
   }).onOk(() => {
-    const foundIndex = customers.findIndex((f) => f.Name === model.value.Name);
+    const foundIndex = customers.findIndex((f) => f.Id === model.value.Id);
     if (foundIndex != -1) {
       customers.splice(foundIndex, 1);
       // saveData("customer");
@@ -115,7 +121,12 @@ const filterFn = (val, update) => {
   update(() => {
     const needle = val?.trim().toLocaleLowerCase().split(" ");
     options.value = customers.filter((f) =>
-      needle.every((e) => f.Name.toLocaleLowerCase().indexOf(e) > -1)
+      needle.every(
+        (e) =>
+          `${f.FirstName}${f.LastName}${f.CompanyName}`
+            .toLocaleLowerCase()
+            .indexOf(e) > -1
+      )
     );
   });
 };

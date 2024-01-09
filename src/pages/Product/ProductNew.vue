@@ -9,6 +9,7 @@
           :rules="[(val) => !!val || 'Field is required']"
           lazy-rules
         />
+        <q-input v-model="model.Brand" :label="$t('brand')" />
         <q-input v-model="model.Category" :label="$t('category')" />
         <q-input
           v-model.number="model.Power"

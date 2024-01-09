@@ -15,10 +15,13 @@
                     · Innungstraße 22, 50354 Hürth
                   </div>
                   <div class="q-mt-lg">
-                    <q-img src="images/logo.jpg" width="100px" />
+                    <q-img src="images/logo.jpg" width="200px" />
                   </div>
                 </div>
-                <p>{{ model.Customer?.Title }} {{ model.Customer?.Name }}</p>
+                <p>
+                  {{ model.Customer?.Title }} {{ model.Customer?.FirstName }}
+                  {{ model.Customer?.LastName }}
+                </p>
                 <p>{{ model.Customer?.StreetAndNumber }}</p>
                 <p>
                   {{ model.Customer?.PostalCode }}
@@ -35,7 +38,6 @@
                 <div>
                   <div class="empty-space"></div>
                   <div class="empty-space"></div>
-                  <div class="empty-space"></div>
                   <p class="text-right">Hürth, {{ germanDate(model.Date) }}</p>
                   <p class="text-h6 text-bold q-mb-xs">ANGEBOT</p>
                   <p class="text-subtitle-2 q-mt-xs">
@@ -45,7 +47,8 @@
 
                   <p>
                     Sehr geehrter {{ model.Customer?.Title }}
-                    {{ model.Customer?.Name }},<br />vielen Dank für Ihre
+                    {{ model.Customer?.FirstName }}
+                    {{ model.Customer?.LastName }},<br />vielen Dank für Ihre
                     Anfrage. Gerne unterbreiten wir Ihnen das gewünschte
                     freibleibende Angebot:
                   </p>
@@ -240,14 +243,10 @@ const $router = useRouter();
 const model = ref({});
 const loading = ref(false);
 const productItems = computed(() =>
-  model.value.Items?.filter((f) => f.Product.Category !== "Service").sort(
-    (a, b) => b.Entity - a.Entity
-  )
+  model.value.Items?.filter((f) => f.Product.Category !== "Service")
 );
 const serviceItems = computed(() =>
-  model.value.Items?.filter((f) => f.Product.Category === "Service").sort(
-    (a, b) => b.Entity - a.Entity
-  )
+  model.value.Items?.filter((f) => f.Product.Category === "Service")
 );
 const loadInvoice = async (id) => {
   loading.value = false;
@@ -285,29 +284,32 @@ watch(
     left: 0;
     right: 0;
   }
+}
+table tr td,
+table tr th {
+  page-break-inside: avoid;
+}
+.empty-space {
+  height: 1.5cm;
+}
+.thick-divider {
+  border: 1px solid #1c1c1c; /* Adjust the thickness and color as needed */
+  margin: 1rem 0; /* Adjust the margin to control the spacing around the divider */
+}
+.products-table th,
+.services-table th {
+  border-left: none; /* Remove left border */
+  border-right: none; /* Remove right border */
+  background-color: #333 !important;
+  color: white !important;
+  border-top: none !important;
+  border-bottom: 1px solid #1c1c1c !important;
+}
 
-  .empty-space {
-    height: 1.5cm;
-  }
-  .thick-divider {
-    border: 2px solid #000; /* Adjust the thickness and color as needed */
-    margin: 1rem 0; /* Adjust the margin to control the spacing around the divider */
-  }
-  .products-table th,
-  .services-table th {
-    border-left: none; /* Remove left border */
-    border-right: none; /* Remove right border */
-    background-color: #333 !important;
-    color: white !important;
-    border-top: none !important;
-    border-bottom: 2px solid #000 !important;
-  }
-
-  .products-table td,
-  .services-table td {
-    border-left: none; /* Remove left border */
-    border-right: none; /* Remove right border */
-    border-bottom: 1px solid #000 !important;
-  }
+.products-table td,
+.services-table td {
+  border-left: none; /* Remove left border */
+  border-right: none; /* Remove right border */
+  border-bottom: 1px solid #1c1c1c !important;
 }
 </style>
